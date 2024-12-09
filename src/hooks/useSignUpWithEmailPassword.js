@@ -1,10 +1,12 @@
 import { auth, firestore } from "../components/Firebase/firebase";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { setDoc, doc } from "firebase/firestore";
+import useAuthStore from "../components/store/authStore";
 
 const useSignUpWithEmailPassword = () => {
     const [createUserWithEmailAndPassword, user, loading, error] =
         useCreateUserWithEmailAndPassword(auth);
+        const loginUser = useAuthStore((state) => state.login);
     const signup = async (inputs) => {
         try {
             const newUser = await createUserWithEmailAndPassword(inputs.email, inputs.password);
@@ -31,8 +33,8 @@ const useSignUpWithEmailPassword = () => {
             };
 
             await setDoc(doc(firestore, "users", newUser.user.uid), userDoc);
+            loginUser(userDoc);
             console.log("User added successfully");
-            localStorage.setItem("userInfo", JSON.stringify(userDoc));
             return "success";
         } catch (err) {
             return err

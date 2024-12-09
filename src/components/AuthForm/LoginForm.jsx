@@ -1,49 +1,67 @@
 import {
+  Alert,
   Box,
   Button,
+  Collapse,
   Container,
   Divider,
+  Grow,
+  Slide,
+  Snackbar,
+  SnackbarContent,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import { Link, useNavigate } from "react-router-dom";
+import useLoginFormHandler from "../../hooks/useLoginFormHandler";
+import useLogin from "../../hooks/useLogin";
 
 const LoginForm = () => {
+  const { inputs, errors, validate, handleInputChange } = useLoginFormHandler();
+  const { login, loading, error } = useLogin();
+  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
-  const [input, setInput] = useState({
-    email: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState({
-    email: false,
-    password: false,
-  });
-  const handleAuth = (e) => {
+
+  const handleAuth = async (e) => {
     e.preventDefault();
-    let hasError = false;
-    const newErrors = { email: false, password: false };
-
-    if (!input.email.trim()) {
-      newErrors.email = true;
-      hasError = true;
-    }
-
-    if (!input.password.trim()) {
-      newErrors.password = true;
-      hasError = true;
-    }
-
-    setErrors(newErrors);
-
-    if (!hasError) {
-      navigate("/");
+    if (!validate()) return;
+    try {
+      const result = await login(inputs);
+      if (result) {
+        setShowAlert(true);
+      }else{
+        navigate("/");
+      }
+    } catch (error) {
+      console.log("error", error);
     }
   };
+
+  const handleClose = () => {
+    setShowAlert(false);
+  };
+
+  const TransitionUp = (props) => {
+    return <Slide {...props} direction="up" />;
+  };
+
   return (
     <>
+      <Snackbar
+        open={showAlert}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        TransitionComponent={TransitionUp}
+        message="Invalid email or password"
+      >
+        <Alert onClose={handleClose} severity="error" sx={{ width: "100%" }}>
+          Invalid email or password
+        </Alert>
+      </Snackbar>
       <Box
         sx={{
           width: {
@@ -73,7 +91,7 @@ const LoginForm = () => {
           >
             <TextField
               id="outlined-basic"
-              label="Phone no, usename, email"
+              label="Phone no, username, email"
               variant="outlined"
               size="small"
               slotProps={{
@@ -92,11 +110,11 @@ const LoginForm = () => {
                   color: (theme) => theme.palette.warning.main,
                 },
               }}
-              onChange={(e) => {
-                setInput({ ...input, email: e.target.value });
-                if (errors.email) setErrors({ ...errors, email: false });
-              }}
-              helperText={errors.email && "Email is required"}
+              onChange={handleInputChange}
+              helperText={errors.email}
+              error={!!errors.email}
+              value={inputs.email}
+              name="email"
             />
             <TextField
               id="outlined-basic"
@@ -119,20 +137,21 @@ const LoginForm = () => {
                   color: (theme) => theme.palette.warning.main,
                 },
               }}
-              onChange={(e) => {
-                setInput({ ...input, password: e.target.value });
-                if (errors.password) setErrors({ ...errors, password: false });
-              }}
-              helperText={errors.password && "Password is required"}
+              onChange={handleInputChange}
+              helperText={errors.password}
+              error={!!errors.password}
+              value={inputs.password}
+              name="password"
             />
             <Button
               variant="contained"
               color="secondary"
               size="small"
-              onClick={(e) => handleAuth(e)}
+              onClick={handleAuth}
               type="submit"
+              disabled={Boolean(loading)}
             >
-              Login
+              {loading ? "logging in..." : "Log in"}
             </Button>
           </Stack>
           <Box

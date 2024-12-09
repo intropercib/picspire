@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Alert,
   Box,
   Button,
   Container,
   Divider,
+  Snackbar,
   Stack,
   TextField,
   Typography,
@@ -14,14 +15,33 @@ import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Link } from "react-router-dom";
-import useLoginFormHandler from "../../hooks/useLoginFormHandler";
 import useSignUpWithEmailPassword from "../../hooks/useSignUpWithEmailPassword";
+import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const { inputs, handleInputChange, validate, errors, alertInfo, showAlert } =
-    useLoginFormHandler();
+  const [showAlert, setShowAlert] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState("success");
+
+  const {
+    inputs,
+    handleInputChange,
+    validate,
+    errors,
+    alertInfo,
+    showAlert: showFormAlert,
+    validateUserName,
+  } = useSignUpFormHandler();
   const { signup, loading } = useSignUpWithEmailPassword();
+
+  useEffect(() => {
+    if (alertInfo.message) {
+      setAlertMessage(alertInfo.message);
+      setAlertSeverity(alertInfo.severity);
+      setShowAlert(true);
+    }
+  }, [alertInfo]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,16 +50,20 @@ const SignUpForm = () => {
     try {
       const result = await signup(inputs);
       if (result === "success") {
-        e.target.reset();
-        showAlert("User added successfully", "success");
+        showFormAlert("User added successfully", "success");
       } else if (result === "userExists") {
-        showAlert("User already exists", "warning");
+        showFormAlert("User already exists", "warning");
       } else if (result === "error") {
-        showAlert("Error on creating account.", "warning");
+        showFormAlert("Error on creating account.", "warning");
       }
     } catch (err) {
       console.log("FROM SIGNUPFORM:: ", err);
+      showFormAlert("Error on creating account.", "error");
     }
+  };
+
+  const handleClose = () => {
+    setShowAlert(false);
   };
 
   return (
@@ -51,20 +75,16 @@ const SignUpForm = () => {
         height: "100vh",
       }}
     >
-      {alertInfo.message && (
-        <Alert
-          severity={alertInfo.severity}
-          sx={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            margin: "10px",
-            width: "40%",
-          }}
-        >
-          {alertInfo.message}
+      <Snackbar
+        open={showAlert}
+        autoHideDuration={3000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert onClose={handleClose} severity={alertSeverity} sx={{ width: "100%" }}>
+          {alertMessage}
         </Alert>
-      )}
+      </Snackbar>
 
       <Box
         sx={{
@@ -96,7 +116,7 @@ const SignUpForm = () => {
               Login with Facebook
             </Button>
             <Divider>OR</Divider>
-            {["email", "fullName", "username"].map((field) => (
+            {["email", "fullName"].map((field) => (
               <TextField
                 key={field}
                 label={field.charAt(0).toUpperCase() + field.slice(1)}
@@ -115,6 +135,22 @@ const SignUpForm = () => {
               />
             ))}
             <TextField
+              key="username"
+              label="Username"
+              name="username"
+              value={inputs.username}
+              onChange={handleInputChange}
+              error={!!errors.username}
+              helperText={errors.username}
+              size="small"
+              sx={{
+                "& .MuiFormHelperText-root": {
+                  fontSize: "0.6rem",
+                  margin: "0px",
+                },
+              }}
+            />
+            <TextField
               label="Password"
               name="password"
               size="small"
@@ -129,31 +165,29 @@ const SignUpForm = () => {
                   margin: "0px",
                 },
               }}
-              slotProps={{
-                input: {
-                  endAdornment: (
-                    <IconButton
-                      onClick={() => setShowPassword((prev) => !prev)}
-                      edge="end"
-                    >
-                      {showPassword ? (
-                        <VisibilityOff
-                          sx={{
-                            color: (theme) => theme.palette.text.primary,
-                            fontSize: "18px",
-                          }}
-                        />
-                      ) : (
-                        <Visibility
-                          sx={{
-                            color: (theme) => theme.palette.text.primary,
-                            fontSize: "18px",
-                          }}
-                        />
-                      )}
-                    </IconButton>
-                  ),
-                },
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    edge="end"
+                  >
+                    {showPassword ? (
+                      <VisibilityOff
+                        sx={{
+                          color: (theme) => theme.palette.text.primary,
+                          fontSize: "18px",
+                        }}
+                      />
+                    ) : (
+                      <Visibility
+                        sx={{
+                          color: (theme) => theme.palette.text.primary,
+                          fontSize: "18px",
+                        }}
+                      />
+                    )}
+                  </IconButton>
+                ),
               }}
             />
             <Button

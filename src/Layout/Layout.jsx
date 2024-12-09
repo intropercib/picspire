@@ -2,9 +2,13 @@ import { Box, Stack } from "@mui/material";
 import React from "react";
 import { useLocation } from "react-router-dom";
 import SideBar from "../components/SideBar/SideBar";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../components/Firebase/firebase";
 
 const Layout = ({ children }) => {
   const { pathname } = useLocation();
+  const [user, loading, error] = useAuthState(auth);
+  const sideBarRender = pathname !== "/login" && pathname !== "/signup" && user;
 
   return (
     <Box
@@ -14,7 +18,7 @@ const Layout = ({ children }) => {
         overflow: "hidden",
       }}
     >
-      {pathname !== "/login" && pathname !== "/signup" ? (
+      {sideBarRender ? (
         <Stack direction={"row"} sx={{ width: "100%", height: "100%" }}>
           <Box
             sx={{
@@ -48,7 +52,7 @@ const Layout = ({ children }) => {
               width: "100%",
               height: "100vh",
               overflowY: "auto",
-              scrollbarWidth:"none",
+              scrollbarWidth: "none",
             }}
           >
             {children}
