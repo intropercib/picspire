@@ -1,223 +1,174 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
-  Alert,
   Box,
-  Button,
-  Container,
-  Divider,
-  Snackbar,
   Stack,
-  TextField,
+  Button,
   Typography,
+  Divider,
   IconButton,
 } from "@mui/material";
 import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { Link } from "react-router-dom";
-import useSignUpWithEmailPassword from "../../hooks/useSignUpWithEmailPassword";
 import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
+import useSignUpWithEmailPassword from "../../hooks/useSignUpWithEmailPassword";
+import FormSnackbar from "./FormSnackBar";
+import { FormTextField } from "./FormTextField";
 
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState("success");
-
-  const {
-    inputs,
-    handleInputChange,
-    validate,
-    errors,
-    alertInfo,
-    showAlert: showFormAlert,
-    validateUserName,
-  } = useSignUpFormHandler();
-  const { signup, loading } = useSignUpWithEmailPassword();
-
-  useEffect(() => {
-    if (alertInfo.message) {
-      setAlertMessage(alertInfo.message);
-      setAlertSeverity(alertInfo.severity);
-      setShowAlert(true);
-    }
-  }, [alertInfo]);
+  const { inputs, handleInputChange, validate, errors, alertInfo, showAlert } =
+    useSignUpFormHandler();
+  const { signup, loading, validateUserNameAndEmail } =
+    useSignUpWithEmailPassword();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate input fields
     if (!validate()) return;
 
     try {
+      // Check if username or email already exists
+      const { isUsernameTaken, isEmailTaken } = await validateUserNameAndEmail(
+        inputs.username,
+        inputs.email
+      );
+      if (isUsernameTaken) {
+        showAlert("Username already exists", "warning");
+        return;
+      }
+      if (isEmailTaken) {
+        showAlert("Email already exists", "warning");
+        return;
+      }
+
+      // Proceed with sign-up
       const result = await signup(inputs);
       if (result === "success") {
-        showFormAlert("User added successfully", "success");
-      } else if (result === "userExists") {
-        showFormAlert("User already exists", "warning");
-      } else if (result === "error") {
-        showFormAlert("Error on creating account.", "warning");
+        showAlert("User added successfully", "success");
+      } else if (result === "emailExists") {
+        showAlert("Email already exists", "error");
+      } else {
+        showAlert("An unexpected error occurred.", "error");
       }
-    } catch (err) {
-      console.log("FROM SIGNUPFORM:: ", err);
-      showFormAlert("Error on creating account.", "error");
+    } catch (error) {
+      console.error("Sign-up error:", error.message || error);
+      showAlert("An unexpected error occurred. Please try again.", "error");
     }
   };
 
-  const handleClose = () => {
-    setShowAlert(false);
-  };
+  // Reset the snackbar
+  const handleSnackbarClose = () => showAlert("", "");
 
   return (
-    <Container
+    <Box
       sx={{
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
+        p: 2,
       }}
     >
-      <Snackbar
-        open={showAlert}
-        autoHideDuration={3000}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-      >
-        <Alert onClose={handleClose} severity={alertSeverity} sx={{ width: "100%" }}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-
-      <Box
-        sx={{
-          width: { xs: "100%", sm: "100%", md: "40%", lg: "40%" },
-        }}
-      >
+      <FormSnackbar
+        open={!!alertInfo.message}
+        message={alertInfo.message}
+        severity={alertInfo.severity}
+        onClose={handleSnackbarClose}
+      />
+      <Box sx={{ width: { xs: "100%", sm: "400px" }, p: 3 }}>
         <Stack
-          direction="column"
-          spacing={1.2}
+          spacing={2}
           sx={{
-            border: "1px solid #B3B3B3",
-            padding: "40px 30px 10px 30px",
-            alignItems: "center",
+            border: "1px solid",
+            borderColor: "divider",
+            p: 3,
+            borderRadius: 1,
           }}
         >
-          <img src="src/assets/logo.png" alt="logo" width="200px" />
-          <Stack sx={{ width: "100%", gap: "10px" }}>
-            <Typography align="center" variant="body2">
-              Sign up to see photos and videos from your friends.
-            </Typography>
-            <Button
-              startIcon={<FacebookRoundedIcon />}
-              variant="contained"
-              size="small"
-              sx={{
-                color: (theme) => theme.palette.text.primary,
-              }}
-            >
-              Login with Facebook
-            </Button>
-            <Divider>OR</Divider>
-            {["email", "fullName"].map((field) => (
-              <TextField
-                key={field}
-                label={field.charAt(0).toUpperCase() + field.slice(1)}
-                name={field}
-                value={inputs[field]}
-                onChange={handleInputChange}
-                error={!!errors[field]}
-                helperText={errors[field]}
-                size="small"
-                sx={{
-                  "& .MuiFormHelperText-root": {
-                    fontSize: "0.6rem",
-                    margin: "0px",
-                  },
-                }}
-              />
-            ))}
-            <TextField
-              key="username"
-              label="Username"
-              name="username"
-              value={inputs.username}
-              onChange={handleInputChange}
-              error={!!errors.username}
-              helperText={errors.username}
-              size="small"
-              sx={{
-                "& .MuiFormHelperText-root": {
-                  fontSize: "0.6rem",
-                  margin: "0px",
-                },
-              }}
-            />
-            <TextField
-              label="Password"
-              name="password"
-              size="small"
-              type={showPassword ? "text" : "password"}
-              value={inputs.password}
-              onChange={handleInputChange}
-              error={!!errors.password}
-              helperText={errors.password}
-              sx={{
-                "& .MuiFormHelperText-root": {
-                  fontSize: "0.6rem",
-                  margin: "0px",
-                },
-              }}
-              InputProps={{
-                endAdornment: (
-                  <IconButton
-                    onClick={() => setShowPassword((prev) => !prev)}
-                    edge="end"
-                  >
-                    {showPassword ? (
-                      <VisibilityOff
-                        sx={{
-                          color: (theme) => theme.palette.text.primary,
-                          fontSize: "18px",
-                        }}
-                      />
-                    ) : (
-                      <Visibility
-                        sx={{
-                          color: (theme) => theme.palette.text.primary,
-                          fontSize: "18px",
-                        }}
-                      />
-                    )}
-                  </IconButton>
-                ),
-              }}
-            />
-            <Button
-              variant="contained"
-              onClick={handleSubmit}
-              disabled={loading}
-              sx={{
-                color: (theme) => theme.palette.text.primary,
-              }}
-            >
-              {loading ? "Signing Up..." : "Sign Up"}
-            </Button>
-          </Stack>
+          <Typography variant="h6" align="center">
+            Sign up to see photos and videos from your friends.
+          </Typography>
+          <Button
+            startIcon={<FacebookRoundedIcon />}
+            variant="contained"
+            color="primary"
+            size="small"
+          >
+            Login with Facebook
+          </Button>
+          <Divider>OR</Divider>
+          <FormTextField
+            label="Email"
+            name="email"
+            value={inputs.email}
+            onChange={handleInputChange}
+            error={!!errors.email}
+            helperText={errors.email}
+            autoComplete="off"
+          />
+          <FormTextField
+            label="Full Name"
+            name="fullName"
+            value={inputs.fullName}
+            onChange={handleInputChange}
+            error={!!errors.fullName}
+            helperText={errors.fullName}
+            autoComplete="off"
+          />
+          <FormTextField
+            label="Username"
+            name="username"
+            value={inputs.username}
+            onChange={handleInputChange}
+            error={!!errors.username}
+            helperText={errors.username}
+            autoComplete="off"
+          />
+          <FormTextField
+            label="Password"
+            name="password"
+            type={showPassword ? "text" : "password"}
+            value={inputs.password}
+            onChange={handleInputChange}
+            error={!!errors.password}
+            helperText={errors.password}
+            autoComplete="off"
+            InputProps={{
+              endAdornment: (
+                <IconButton
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              ),
+            }}
+          />
+          <Button
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={loading}
+            fullWidth
+          >
+            {loading ? "Signing Up..." : "Sign Up"}
+          </Button>
         </Stack>
-        <Box
-          sx={{
-            border: "1px solid #B3B3B3",
-            padding: "15px",
-            marginTop: "15px",
-          }}
-        >
-          <Typography variant="h3" align="center">
+        <Box sx={{ border: "1px solid", borderColor: "divider", mt: 2, p: 2 }}>
+          <Typography variant="body2" align="center">
             Have an account?{" "}
-            <Link to="/login" style={{ color: "#0095f6" }}>
+            <Typography component={Link} to="/login" sx={{
+              textDecoration: "none",
+              color: (theme) => theme.palette.secondary.main,
+            }}>
               Login
-            </Link>
+            </Typography>
           </Typography>
         </Box>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

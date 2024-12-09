@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 const useLoginFormHandler = () => {
+
     const [inputs, setInputs] = useState({
         email: "",
         password: "",
@@ -8,17 +9,18 @@ const useLoginFormHandler = () => {
 
     const [errors, setErrors] = useState({});
 
+    // Set input values
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
-    
 
+    // Validate user inputs
     const validate = () => {
         const newErrors = {};
         let hasError = false;
-        
+
         if (!inputs.email.trim()) {
             newErrors.email = "Email is required";
             hasError = true;
@@ -29,7 +31,7 @@ const useLoginFormHandler = () => {
             hasError = true;
         }
 
-
+        // Error for helper text
         setErrors(newErrors);
         return !hasError;
     };
@@ -38,7 +40,7 @@ const useLoginFormHandler = () => {
         inputs,
         errors,
         validate,
-        handleInputChange
+        handleInputChange,
     };
 };
 

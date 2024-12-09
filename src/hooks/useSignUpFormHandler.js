@@ -13,23 +13,31 @@ const useSignUpFormHandler = () => {
     const [errors, setErrors] = useState({});
     const [alertInfo, setAlertInfo] = useState({ message: "", severity: "" });
 
+    // Set input values
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
+    // Validate user inputs
     const validate = () => {
         const newErrors = {};
         let hasError = false;
-        
+
         if (!inputs.email.trim()) {
             newErrors.email = "Email is required";
+            hasError = true;
+        } else if (!/\S+@\S+\.\S+/.test(inputs.email)) {
+            newErrors.email = "Invalid email format";
             hasError = true;
         }
 
         if (!inputs.password.trim()) {
             newErrors.password = "Password is required";
+            hasError = true;
+        } else if (inputs.password.length < 6) {
+            newErrors.password = "Password must be at least 6 characters";
             hasError = true;
         }
 
@@ -42,20 +50,13 @@ const useSignUpFormHandler = () => {
             newErrors.username = "Username is required";
             hasError = true;
         }
-
+        
+        // Error for helper text
         setErrors(newErrors);
         return !hasError;
     };
 
-    const showAlert = (message, severity) => {
-        setAlertInfo({ message, severity });
-        setTimeout(() => setAlertInfo({ message: "", severity: "" }), 3000);
-    };
-    const validateUserName = async (username) => {
-        const q = query(collection(firestore, "users"), where("username", "==", username));
-        const querySnapshot = await getDocs(q);
-        return !querySnapshot.empty;
-    };
+   
 
     return {
         inputs,
@@ -63,8 +64,10 @@ const useSignUpFormHandler = () => {
         validate,
         errors,
         alertInfo,
-        showAlert,
-        validateUserName,
+        showAlert: (message, severity) => {
+            setAlertInfo({ message, severity });
+            setTimeout(() => setAlertInfo({ message: "", severity: "" }), 3000);
+        },
     };
 };
 

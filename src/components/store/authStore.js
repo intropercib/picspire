@@ -11,4 +11,4 @@ const useAuthStore = create((set) => ({
     },
 }))
 
-export default useAuthStore
+export default useAuthStore;

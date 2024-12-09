@@ -34,17 +34,16 @@ const Auth = () => {
             width: {
               xs: "100%",
               sm: "400px",
-              md: "350px",
-              lg: "350px",
+              md: "400px",
+              lg: "400px",
             },
           }}
         >
+        
           <LoginForm />
           <Stack
             spacing={2}
             sx={{
-              marginTop: "15px",
-              padding: "10px",
               display: {
                 xs: "none",
                 sm: "block",
@@ -60,22 +59,22 @@ const Auth = () => {
               direction="row"
               sx={{
                 alignItems: "center",
-                justifyContent: "center",
-                gap: "20px",
+                justifyContent: "space-around",
+                padding: "0px 20px",
               }}
             >
               <Box>
                 <img
                   src="src/assets/microsoft.png"
                   alt="microsoft"
-                  height="40px"
+                  height="45px"
                 />
               </Box>
               <Box>
                 <img
                   src="src/assets/playstore.png"
                   alt="playstore"
-                  height="40px"
+                  height="45px"
                 />
               </Box>
             </Stack>

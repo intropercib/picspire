@@ -27,6 +27,7 @@ const Home = () => {
           >
             STORIES
           </Box>
+          {/* for test */}
           <FeedPost />
           <FeedPost />
           <FeedPost />
