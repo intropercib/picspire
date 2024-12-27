@@ -3,11 +3,12 @@ import { Box, Grid2 as Grid, Stack } from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ChatBubbleRoundedIcon from "@mui/icons-material/ChatBubbleRounded";
 import ProfileModal from "./ProfileModal";
-const ProfilePost = () => {
-  const [open, setOpen] = useState(false);
 
+const ProfilePost = ({ post }) => {
+  const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
   return (
     <>
       <Grid
@@ -22,17 +23,21 @@ const ProfilePost = () => {
           justifyContent: "center",
           margin: "2px",
           position: "relative",
+          border:"1px solid",
+          height: "250px",
+          borderColor:"divider"
         }}
         onClick={handleOpen}
       >
         <img
-          src="https://www.w3schools.com/howto/img_avatar.png"
+          src={post.imageUrl}
           style={{
             width: "100%",
+            height: "100%",
             maxWidth: "250px",
-            height: "auto",
-            objectFit: "cover",
+            objectFit: "contain",
           }}
+          alt={`${post.authorUsername}'s post`}
         />
         <Box
           sx={{
@@ -62,19 +67,27 @@ const ProfilePost = () => {
               alignItems="center"
               spacing={0.1}
             >
-              <FavoriteIcon /> <span> 120</span>
+              <FavoriteIcon /> <span>{post.likes.length}</span>
             </Stack>
             <Stack
               direction={{ sm: "row", xs: "column" }}
               alignItems="center"
               spacing={0.1}
             >
-              <ChatBubbleRoundedIcon /> <span> 45</span>
+              <ChatBubbleRoundedIcon /> <span> {post.comments.length} </span>
             </Stack>
           </Stack>
         </Box>
       </Grid>
-      <ProfileModal open={open} onClose={handleClose} />
+      <ProfileModal
+        open={open}
+        onClose={handleClose}
+        comments={post.comments}
+        postImage={post.imageUrl}
+        username={post.authorUsername}
+        profilePicURL={post.authorProfilePicURL}
+        post={post}
+      />
     </>
   );
 };

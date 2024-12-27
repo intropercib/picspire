@@ -1,87 +1,88 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
 import React from "react";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import LoginForm from "../../components/AuthForm/LoginForm";
+import microsoft from '../../assets/microsoft.png'; 
+import playstore from '../../assets/playstore.png';
+import authImage from '../../assets/auth.png'; 
+
 const Auth = () => {
   return (
-    <>
-      <Container
+    <Container
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        gap: "30px",
+      }}
+    >
+      <Box
         sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-          gap: "30px",
+          height: "85%",
+          display: {
+            xs: "none",
+            md: "block",
+          },
         }}
       >
-        <Box
+        <img
+          src={authImage}
+          alt="authImage"
+          width="100%"
+          height="100%"
+        />
+      </Box>
+      <Box
+        sx={{
+          width: {
+            xs: "100%",
+            sm: "400px",
+            md: "400px",
+            lg: "400px",
+          },
+        }}
+      >
+        <LoginForm />
+        <Stack
+          spacing={2}
           sx={{
-            height: "85%",
             display: {
               xs: "none",
+              sm: "block",
               md: "block",
+              lg: "block",
             },
           }}
         >
-          <img
-            src="src/assets/auth.png"
-            alt="authimage"
-            width="100%"
-            height="100%"
-          />
-        </Box>
-        <Box
-          sx={{
-            width: {
-              xs: "100%",
-              sm: "400px",
-              md: "400px",
-              lg: "400px",
-            },
-          }}
-        >
-        
-          <LoginForm />
+          <Typography variant="h3" align="center">
+            Get the app.
+          </Typography>
           <Stack
-            spacing={2}
+            direction="row"
             sx={{
-              display: {
-                xs: "none",
-                sm: "block",
-                md: "block",
-                lg: "block",
-              },
+              alignItems: "center",
+              justifyContent: "space-around",
+              padding: "0px 20px",
             }}
           >
-            <Typography variant="h3" align="center">
-              Get the app.
-            </Typography>
-            <Stack
-              direction="row"
-              sx={{
-                alignItems: "center",
-                justifyContent: "space-around",
-                padding: "0px 20px",
-              }}
-            >
-              <Box>
-                <img
-                  src="src/assets/microsoft.png"
-                  alt="microsoft"
-                  height="45px"
-                />
-              </Box>
-              <Box>
-                <img
-                  src="src/assets/playstore.png"
-                  alt="playstore"
-                  height="45px"
-                />
-              </Box>
-            </Stack>
+            <Box>
+              <img
+                src={microsoft}
+                alt="microsoft"
+                height="45px"
+              />
+            </Box>
+            <Box>
+              <img
+                src={playstore}
+                alt="playstore"
+                height="45px"
+              />
+            </Box>
           </Stack>
-        </Box>
-      </Container>
-    </>
+        </Stack>
+      </Box>
+    </Container>
   );
 };
 

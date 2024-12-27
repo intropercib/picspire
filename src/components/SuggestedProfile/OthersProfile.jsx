@@ -1,28 +1,43 @@
 import React, { useState } from "react";
-import { Avatar, Stack, Typography } from "@mui/material";
+import { Stack, Typography, Avatar } from "@mui/material";
+import useAuthStore from "../store/useAuthStore";
+import useFollowUnfollow from "../../hooks/useFollowUnfollow";
 
-const OthersProfile = () => {
-  const [isFollow, setIsFollow] = useState(false);
+const OthersProfile = ({ user }) => {
+  const authUser = useAuthStore((state) => state.user);
+  const { isUpdating, isFollowing, handleFollowUnfollow } = useFollowUnfollow(
+    user.id
+  );
+  const [isLocalFollowing, setIsLocalFollowing] = useState(isFollowing);
 
-  const handleFollow = () => setIsFollow((prev) => !prev);
+  if (
+    !user?.id ||
+    user.id === authUser?.id ||
+    authUser?.following?.includes(user.id)
+  ) {
+    return null;
+  }
+
+  if (isLocalFollowing !== isFollowing) {
+    setIsLocalFollowing(isFollowing);
+  }
 
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center">
       <Stack direction="row" spacing={2} alignItems="center">
         <Avatar
-          src="https://www.w3schools.com/howto/img_avatar.png"
-          alt="User Avatar"
+          src={
+            user.profilePicURL ||
+            "https://www.w3schools.com/howto/img_avatar.png"
+          }
+          alt={`${user.username} Avatar`}
           sx={{ height: 50, width: 50, cursor: "pointer" }}
         />
-        <Stack
-          sx={{
-            cursor: "pointer",
-          }}
-        >
+        <Stack sx={{ cursor: "pointer" }}>
           <Typography variant="body1" sx={{ lineHeight: 0.8 }}>
-            Username
+            {user.fullName}
           </Typography>
-          <Typography variant="body2">Username</Typography>
+          <Typography variant="body2">{user.username}</Typography>
         </Stack>
       </Stack>
 
@@ -30,21 +45,22 @@ const OthersProfile = () => {
         component="span"
         sx={{
           fontSize: "14px",
-          cursor: "pointer",
+          cursor: isUpdating ? "default" : "pointer",
           color: (theme) =>
-            isFollow
+            isFollowing
               ? theme.palette.secondary.main
               : theme.palette.text.primary,
           "&:hover": {
             color: (theme) =>
-              isFollow
+              isFollowing
                 ? theme.palette.text.primary
                 : theme.palette.secondary.main,
           },
+          opacity: isUpdating ? 0.7 : 1,
         }}
-        onClick={handleFollow}
+        onClick={isUpdating ? undefined : handleFollowUnfollow}
       >
-        {isFollow ? "Unfollow" : "Follow"}
+        {isUpdating ? "Updating..." : isLocalFollowing ? "Unfollow" : "Follow"}
       </Typography>
     </Stack>
   );

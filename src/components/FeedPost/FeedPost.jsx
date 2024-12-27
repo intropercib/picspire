@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Avatar,
   Box,
@@ -6,132 +6,245 @@ import {
   Stack,
   TextField,
   Typography,
+  IconButton,
+  Link,
+  Skeleton,
 } from "@mui/material";
 import {
   MoreHoriz as MoreHorizIcon,
-  Circle as CircleIcon,
   FavoriteBorder as FavoriteBorderIcon,
   Favorite as FavoriteSharpIcon,
-  MapsUgc as MapsUgcSharpIcon,
-  SendOutlined as SendOutlinedIcon,
-  BookmarkBorder as BookmarkBorderSharpIcon,
 } from "@mui/icons-material";
+import useAuthStore from "../store/useAuthStore";
+import usePostStore from "../store/usePostStore";
+import ProfileModal from "../Profile/ProfileModal";
+import useComments from "../../hooks/useComments";
+import BookmarkBorderSharpIcon from "@mui/icons-material/BookmarkBorderSharp";
+import BookmarkSharpIcon from "@mui/icons-material/BookmarkSharp";
+import MapsUgcSharpIcon from "@mui/icons-material/MapsUgcSharp";
+import formatTime from "../../utils/formatTime";
+import SkeletonFeedPost from "./SkeletonFeedPost";
 
-const FeedPost = () => {
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(1000);
+const FeedPost = ({ post }) => {
+  const authUser = useAuthStore((state) => state.user);
+  const savedPosts = useAuthStore((state) => state.savedPosts);
+  const toggleLikePost = usePostStore((state) => state.toggleLikePost);
+  const savePost = useAuthStore((state) => state.savePost);
+  const removeSavedPost = useAuthStore((state) => state.removeSavedPost);
+
+  const isLiked = post.likes.includes(authUser?.userId);
+  const isSaved = savedPosts.includes(post.id);
+  const likeCount = post.likes.length;
 
   const handleLike = () => {
-    setIsLiked((prev) => !prev);
-    setLikeCount((prev) => (isLiked ? Math.max(prev - 1, 0) : prev + 1));
+    if (authUser) {
+      toggleLikePost(post.id, authUser.userId);
+    }
+  };
+  const handleSavePost = async () => {
+    if (isSaved) {
+      await removeSavedPost(post.id);
+    } else {
+      await savePost(post.id);
+    }
   };
 
-  return (
-    <Paper
-      sx={{
-        backgroundColor: (theme) => theme.palette.background.default,
-        padding: 2,
-        margin: "auto",
-        marginBlock: 2,
-        boxShadow: 3,
-        maxWidth: "100%",
-        width: { xs: "100%", sm: "500px", md: "550px", lg: "500px" },
-      }}
-    >
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Avatar src="https://www.w3schools.com/howto/img_avatar.png" />
-          <Typography
-            variant="h5"
-            sx={{ fontSize: { xs: "14px", sm: "16px", md: "18px" } }}
-          >
-            Username
-          </Typography>
-          <Typography
-            variant="body2"
-            sx={{ color: "text.secondary", fontSize: { xs: "12px", sm: "14px" } }}
-          >
-            <CircleIcon sx={{ fontSize: 6 }} /> 2w
-          </Typography>
-        </Stack>
-        <MoreHorizIcon />
-      </Stack>
+  const { comments, newComment, setNewComment, addComment } = useComments(post);
 
-      <Box
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return <SkeletonFeedPost />;
+  }
+  return (
+    <>
+      <Paper
         sx={{
-          marginY: 2,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          border: 1,
-          borderColor: (theme) => theme.palette.divider,
-          borderRadius: 2,
-          width: "100%",
-          height: { xs: "400px", sm: "400px", md: "500px", lg: "600px" },
+          backgroundColor: (theme) => theme.palette.background.default,
+          padding: 2,
+          margin: "auto",
+          marginBlock: 2,
+          boxShadow: 3,
+          maxWidth: "100%",
+          width: { xs: "100%", sm: "500px", md: "550px", lg: "450px" },
+          border: "2px solid red",
         }}
       >
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-            borderRadius: 2,
-            overflow: "hidden",
-          }}
+        {/* Header */}
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
         >
-          <img
-            src="https://www.w3schools.com/howto/img_avatar.png"
-            alt="post"
-            style={{ objectFit: "contain", width: "100%", height: "100%" }}
-          />
-        </Box>
-      </Box>
-
-      <Box>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Stack direction="row" spacing={2}>
-            <Box onClick={handleLike} sx={{ cursor: "pointer" }}>
-              {isLiked ? (
-                <FavoriteSharpIcon
-                  sx={{ fontSize: { xs: "20px", lg: "30px" }, color: "warning.main" }}
-                />
-              ) : (
-                <FavoriteBorderIcon sx={{ fontSize: { xs: "20px", lg: "30px" } }} />
-              )}
-            </Box>
-            <MapsUgcSharpIcon sx={{ fontSize: { xs: "20px", lg: "30px" } }} />
-            <SendOutlinedIcon sx={{ fontSize: { xs: "20px", lg: "30px" } }} />
+          <Stack direction="row" alignItems="center" spacing={1}>
+            <Avatar
+              src={
+                post.authorProfilePicURL ||
+                "https://www.w3schools.com/howto/img_avatar.png"
+              }
+            />
+            <Typography
+              variant="h5"
+              sx={{ fontSize: { xs: "14px", sm: "16px", md: "18px" } }}
+            >
+              {post.authorUsername}
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "text.secondary",
+                fontSize: { xs: "12px", sm: "14px" },
+              }}
+            >
+              {post.createdAt?.toDate
+                ? formatTime(post.createdAt.toDate())
+                : ""}
+            </Typography>
           </Stack>
-          <BookmarkBorderSharpIcon sx={{ fontSize: { xs: "20px", lg: "30px" } }} />
+          {/* <IconButton>
+            <MoreHorizIcon />
+          </IconButton> */}
         </Stack>
 
-        <Box mt={1}>
-          <Typography
-            variant="body1"
-            sx={{ fontSize: { xs: "14px", md: "16px" }, lineHeight: 1.2 }}
+        {/* Image */}
+        <Box
+          sx={{
+            marginY: 2,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            border: 1,
+            borderColor: (theme) => theme.palette.divider,
+            borderRadius: 2,
+            width: "100%",
+            maxHeight: "100%",
+            height: { xs: "400px", sm: "400px", md: "500px", lg: "500px" },
+          }}
+        >
+          <Box
+            sx={{
+              width: "100%",
+              height: "100%",
+              borderRadius: 2,
+              overflow: "hidden",
+            }}
           >
-            {likeCount} likes
-          </Typography>
-          <Typography variant="body1" sx={{ fontSize: { xs: "14px", md: "16px" } }}>
-            Caption
-          </Typography>
+            <img
+              src={post.imageUrl}
+              alt="post"
+              style={{ objectFit: "contain", width: "100%", height: "100%" }}
+            />
+          </Box>
         </Box>
 
-        <Typography variant="body2" sx={{ color: "text.secondary" }}>
-          See all comments
-        </Typography>
-        <TextField
-          placeholder="Add comments..."
-          variant="standard"
-          fullWidth
-          sx={{
-            "& .MuiInputBase-root": {
-              fontSize: "15px",
-              paddingBottom: "6px",
-            },
-          }}
-        />
-      </Box>
-    </Paper>
+        {/* Actions */}
+        <Box>
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Stack direction="row" spacing={2}>
+              <IconButton onClick={handleLike}>
+                {isLiked ? (
+                  <FavoriteSharpIcon
+                    sx={{
+                      fontSize: { xs: "20px", lg: "30px" },
+                      color: "error.main",
+                    }}
+                  />
+                ) : (
+                  <FavoriteBorderIcon
+                    sx={{ fontSize: { xs: "20px", lg: "30px" } }}
+                  />
+                )}
+              </IconButton>
+              <IconButton onClick={() => setIsProfileModalOpen(true)}>
+                <MapsUgcSharpIcon
+                  sx={{ fontSize: { xs: "20px", lg: "30px" } }}
+                />
+              </IconButton>
+            </Stack>
+            <IconButton onClick={handleSavePost}>
+              {isSaved ? (
+                <BookmarkSharpIcon
+                  sx={{ fontSize: { xs: "20px", lg: "30px" } }}
+                />
+              ) : (
+                <BookmarkBorderSharpIcon
+                  sx={{ fontSize: { xs: "20px", lg: "30px" } }}
+                />
+              )}
+            </IconButton>
+          </Stack>
+
+          {/* Likes and Caption */}
+          <Box mt={1}>
+            <Typography
+              variant="body1"
+              sx={{ fontSize: { xs: "14px", md: "16px" }, lineHeight: 1.2 }}
+            >
+              {likeCount} {likeCount <= 1 ? "like" : "likes"}
+            </Typography>
+            <Typography
+              variant="body1"
+              sx={{ fontSize: { xs: "14px", md: "16px" } }}
+            >
+              {post.caption}
+            </Typography>
+          </Box>
+
+          {/* See All Comments Link */}
+          {comments.length > 0 && (
+            <Link
+              href="#"
+              onClick={() => setIsProfileModalOpen(true)}
+              underline="hover"
+              sx={{ cursor: "pointer", mt: 1, display: "block" }}
+            >
+              See all {comments.length} comment{comments.length > 1 ? "s" : ""}
+            </Link>
+          )}
+
+          {/* Add a New Comment */}
+          <form onSubmit={addComment}>
+            <TextField
+              placeholder="Add a comment..."
+              variant="standard"
+              fullWidth
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              sx={{
+                "& .MuiInputBase-root": {
+                  fontSize: "15px",
+                  paddingBottom: "6px",
+                },
+              }}
+            />
+          </form>
+        </Box>
+      </Paper>
+
+      {/* ProfileModal */}
+      <ProfileModal
+        open={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        comments={comments}
+        postImage={post.imageUrl}
+        username={post.authorUsername}
+        profilePicURL={post.authorProfilePicURL}
+        post={post}
+      />
+    </>
   );
 };
 

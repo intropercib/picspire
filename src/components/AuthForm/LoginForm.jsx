@@ -22,7 +22,6 @@ const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
-  // Handle login form submission
   const handleAuth = async (e) => {
     e.preventDefault();
     if (!validate()) return;
@@ -35,7 +34,6 @@ const LoginForm = () => {
     }
   };
 
-  // Close handler for the snackbar
   const handleClose = () => setShowAlert(false);
 
   return (
@@ -94,7 +92,7 @@ const LoginForm = () => {
             variant="contained"
             color="primary"
             onClick={handleAuth}
-            disabled={loading}
+            disabled={Boolean(loading)}
           >
             {loading ? "Logging in..." : "Log in"}
           </Button>

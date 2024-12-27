@@ -8,9 +8,11 @@ const darkModeTheme = createTheme({
         },
         secondary: {
             main: "#0095f6",
+
         },
         background: {
             default: "#000000",
+            primary:"#1E1E1E",
         },
         text: {
             primary: "#FFFFFF",

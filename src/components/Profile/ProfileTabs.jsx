@@ -12,6 +12,8 @@ import GridOnIcon from "@mui/icons-material/GridOn";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import { useTheme } from "@mui/material/styles";
+import SavedPosts from "./SavedPosts";
+
 
 const ProfileTabs = () => {
   const [value, setValue] = useState(0);
@@ -69,11 +71,6 @@ const ProfileTabs = () => {
             iconPosition="start"
             label={isSmallScreen ? "" : "SAVED"}
           />
-          <Tab
-            icon={<PermContactCalendarIcon fontSize="small" />}
-            iconPosition="start"
-            label={isSmallScreen ? "" : "TAGGED"}
-          />
         </Tabs>
       </Stack>
 
@@ -81,10 +78,9 @@ const ProfileTabs = () => {
         <ProfilePosts />
       </TabPanel>
       <TabPanel index={1}>
-        <Typography variant="body1">Saved Content</Typography>
-      </TabPanel>
-      <TabPanel index={2}>
-        <Typography variant="body1">Tagged Content</Typography>
+        <Typography variant="body1">
+          <SavedPosts />
+        </Typography>
       </TabPanel>
     </Stack>
   );

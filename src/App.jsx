@@ -1,31 +1,41 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home/Home";
-import Auth from "./pages/Auth/Auth";
-import SignUpForm from "./components/AuthForm/SignUpForm";
 import Layout from "./Layout/Layout";
-import Profile from "./pages/Profile/Profile";
-import useAuthStore from "./components/store/authStore";
+import useAuthStore from "./components/store/useAuthStore";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import { protectedRoutes, publicRoutes } from "./routes/RouteComponent";
 
 const App = () => {
   const authUser = useAuthStore((state) => state.user);
+
   return (
-    <>
-      <Layout>
-        <Routes>
+    <Layout>
+      <Routes>
+        {/* Protected Routes */}
+        {protectedRoutes.map(({ path, element: Element }) => (
           <Route
-            path="/"
-            element={authUser ? <Home /> : <Navigate to="/login" />}
+            key={path}
+            path={path}
+            element={
+              <ProtectedRoute>
+                <Element />
+              </ProtectedRoute>
+            }
           />
-          <Route path="/login" element={<Auth />} />
+        ))}
+
+        {/* Public Routes */}
+        {publicRoutes.map(({ path, element: Element }) => (
           <Route
-            path="/signup"
-            element={!authUser ? <SignUpForm /> : <Navigate to="/" />}
+            key={path}
+            path={path}
+            element={
+              authUser && path === "/signup" ? <Navigate to="/" /> : <Element />
+            }
           />
-          <Route path="/:username" element={<Profile />} />
-        </Routes>
-      </Layout>
-    </>
+        ))}
+      </Routes>
+    </Layout>
   );
 };
 

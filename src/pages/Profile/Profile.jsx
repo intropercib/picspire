@@ -1,22 +1,46 @@
-import { Box, Container, Divider } from "@mui/material";
+import { Box, Container, Divider, Typography } from "@mui/material";
 import React from "react";
-import useAuthStore from "../../components/store/authStore";
 import ProfileHeader from "../../components/Profile/ProfileHeader";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
+import { useParams } from "react-router-dom";
+import useGetUserProfile from "../../hooks/useGetUserProfile";
 
 const Profile = () => {
-  const authUser = useAuthStore((state) => state.user);
-  const handleLogOut = useAuthStore((state) => state.logout);
-  return (
-    <>
+  const { username } = useParams();
+  const { isLoading, userProfile, error } = useGetUserProfile(username);
+
+  // if (isLoading) {
+  //   return (
+  //     // <Container>
+  //     //   <Typography>Loading...</Typography>
+  //     // </Container>
+  //   );
+  // }
+
+  if (error) {
+    return (
       <Container>
-        <Box>
-          <ProfileHeader />
-        </Box>
-        <Divider />
-        <ProfileTabs />
+        <Typography color="error">{error}</Typography>
       </Container>
-    </>
+    );
+  }
+
+  if (!userProfile) {
+    return (
+      <Container>
+        <Typography>User not found</Typography>
+      </Container>
+    );
+  }
+
+  return (
+    <Container>
+      <Box>
+        <ProfileHeader username={username} />
+        <Divider  />
+        <ProfileTabs />
+      </Box>
+    </Container>
   );
 };
 

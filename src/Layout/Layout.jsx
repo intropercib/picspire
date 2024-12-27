@@ -1,14 +1,27 @@
 import { Box, Stack } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import SideBar from "../components/SideBar/SideBar";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../components/Firebase/firebase";
+import useAuthStore from "../components/store/useAuthStore";
 
 const Layout = ({ children }) => {
   const { pathname } = useLocation();
-  const [user, loading, error] = useAuthState(auth);
+  const [user, loading, error] = [useAuthStore((state) => state.user), false, null]; // Removed react-firebase-hooks
+  const [isInitialized, setIsInitialized] = useState(false);
   const sideBarRender = pathname !== "/login" && pathname !== "/signup" && user;
+
+  useEffect(() => {
+    const initialize = async () => {
+      await useAuthStore.getState().initialize();
+      setIsInitialized(true);
+    };
+    initialize();
+  }, []);
+
+  // if (!isInitialized) {
+  //   return <div>Loading...</div>;
+  // }
+  const isMessageRender = location.pathname.includes("/message")
 
   return (
     <Box
@@ -26,10 +39,10 @@ const Layout = ({ children }) => {
               left: 0,
               top: 0,
               height: "100vh",
-              width: {
-                xs: "90px",
-                sm: "90px",
-                md: "90px",
+              width: isMessageRender ? "85px" : {
+                xs: "85px",
+                sm: "85px",
+                md: "85px",
                 lg: "250px",
               },
               borderRight: "1px solid",
@@ -43,7 +56,8 @@ const Layout = ({ children }) => {
 
           <Box
             sx={{
-              marginLeft: {
+
+              marginLeft: isMessageRender? "90px" : {
                 xs: "90px",
                 sm: "90px",
                 md: "90px",
