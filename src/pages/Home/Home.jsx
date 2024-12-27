@@ -3,15 +3,16 @@ import React, { useEffect } from "react";
 import FeedPost from "../../components/FeedPost/FeedPost";
 import SuggestedProfile from "../../components/SuggestedProfile/SuggestedProfile";
 import usePostStore from "../../components/store/usePostStore";
-import useAuthStore from "../../components/store/useAuthStore";
+import useFetchAllUsers from "../../hooks/useFetchAllUsers";
+import SkeletonSuggested from "../../components/SuggestedProfile/SkeletonSuggested";
+import SkeletonFeedPost from "../../components/FeedPost/SkeletonFeedPost";
 
 const Home = () => {
   const { posts, loadingPosts, error, fetchPosts, clearPosts } = usePostStore();
-  const authUser = useAuthStore((state) => state.user);
+  const { loading } = useFetchAllUsers();
 
   useEffect(() => {
     fetchPosts();
-
     return () => {
       clearPosts();
     };
@@ -19,47 +20,62 @@ const Home = () => {
 
   return (
     <Container maxWidth={"xl"}>
-      <Stack direction={"row"} spacing={4} sx={{
-        width:"100%",
-        justifyContent:"center",
-      }}>
+      <Stack
+        direction={"row"}
+        spacing={4}
+        sx={{
+          width: "100%",
+          justifyContent: "center",
+        }}
+      >
         <Box
           sx={{
-            
-           width:{
-              lg:"70%",
-              md:"80%",
-              sm:"100%",
-              xs:"100%"
-           }
+            width: {
+              lg: "70%",
+              md: "80%",
+              sm: "100%",
+              xs: "100%",
+            },
           }}
           mx={2}
         >
           <Box
             sx={{
               width: "100%",
-              height: "100px",
-              border:"1px solid red"
             }}
           >
-            STORIES
+            <Typography
+              variant="h3"
+              textAlign="center"
+              sx={{
+                m: 2,
+                color: "text.secondary",
+                fontSize: "0.875rem",
+                fontWeight: "normal",
+                letterSpacing: "0.5px",
+                borderBottom: "1px solid",
+                borderTop: "1px solid",
+                borderColor: "divider",
+                p: 1,
+                userSelect: "none",
+              }}
+            >
+              PicSpire - Where Your Moments Inspire
+            </Typography>
           </Box>
-          <Box sx={{
-          }}>
-            {loadingPosts ? (
-              <Typography variant="h6">Loading...</Typography>
+          <Box sx={{}}>
+            {loading || loadingPosts ? (
+              [...Array(5)].map((_, index) => <SkeletonFeedPost key={index} />)
             ) : error ? (
               <Typography variant="h6" color="error">
                 Error loading posts.
               </Typography>
-            ) : posts.length === 0 ? (
-              <Typography variant="h6">No posts to display.</Typography>
             ) : (
               posts.map((post) => <FeedPost key={post.id} post={post} />)
             )}
           </Box>
         </Box>
-       <Divider orientation="vertical" flexItem />
+        <Divider orientation="vertical" flexItem />
         <Box
           sx={{
             width: {
@@ -74,7 +90,7 @@ const Home = () => {
           }}
           mx={2}
         >
-          <SuggestedProfile />
+          {loading ? <SkeletonSuggested /> : <SuggestedProfile />}
         </Box>
       </Stack>
     </Container>

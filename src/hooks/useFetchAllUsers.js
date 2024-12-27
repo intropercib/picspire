@@ -24,7 +24,8 @@ const useFetchAllUsers = () => {
           id: doc.id,
           ...doc.data(),
         }));
-        setUsersList(users.filter((user) => user.id !== authUser.id));
+        users.filter((user) => user.id !== authUser.id)
+        setUsersList(users);
       } catch (err) {
         setError("Failed to fetch users.");
         console.error(err);
@@ -33,7 +34,7 @@ const useFetchAllUsers = () => {
       }
     };
     fetchUsers();
-  }, [authUser]); 
+  }, [authUser]);
 
   return { usersList, loading, error };
 };

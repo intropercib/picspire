@@ -7,15 +7,22 @@ const useChatService = () => {
   const { setChats, chats } = useChatStore();
 
   const fetchChats = async (userId) => {
-    const chatsRef = collection(firestore, "chats");
-    const q = query(chatsRef, where("participants", "array-contains", userId));
-    const querySnapshot = await getDocs(q);
+    try {
 
-    const chatData = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setChats(chatData);
+      const chatsRef = collection(firestore, "chats");
+      const q = query(chatsRef, where("participants", "array-contains", userId));
+      const querySnapshot = await getDocs(q);
+
+      const chatData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setChats(chatData);
+      return chatData;
+    } catch (err) {
+      console.error("Error fetching chats:", err);
+      return [];
+    }
   };
 
   const createOrGetChat = async (userId1, userId2) => {
@@ -46,47 +53,42 @@ const useChatService = () => {
   };
 
 
-const deleteChat = async (chatId) => {
-  try {
-    // 1. Get all messages with attachments
-    const messagesRef = collection(firestore, `chats/${chatId}/messages`);
-    const messagesSnapshot = await getDocs(messagesRef);
-    
-    // 2. Delete attachments from storage
-    const deleteAttachments = messagesSnapshot.docs.map(async (doc) => {
-      const message = doc.data();
-      if (message.attachment) {
-        const imageRef = ref(storage, message.attachment);
-        try {
-          await deleteObject(imageRef);
-        } catch (error) {
-          console.error("Error deleting attachment:", error);
+  const deleteChat = async (chatId) => {
+    try {
+      const messagesRef = collection(firestore, `chats/${chatId}/messages`);
+      const messagesSnapshot = await getDocs(messagesRef);
+
+      const deleteAttachments = messagesSnapshot.docs.map(async (doc) => {
+        const message = doc.data();
+        if (message.attachment) {
+          const imageRef = ref(storage, message.attachment);
+          try {
+            await deleteObject(imageRef);
+          } catch (error) {
+            console.error("Error deleting attachment:", error);
+          }
         }
-      }
-    });
-    await Promise.all(deleteAttachments);
+      });
+      await Promise.all(deleteAttachments);
 
-    // 3. Delete all messages
-    const deleteMessages = messagesSnapshot.docs.map(doc => 
-      deleteDoc(doc.ref)
-    );
-    await Promise.all(deleteMessages);
+      const deleteMessages = messagesSnapshot.docs.map(doc =>
+        deleteDoc(doc.ref)
+      );
+      await Promise.all(deleteMessages);
 
-    // 4. Delete chat document
-    const chatRef = doc(firestore, "chats", chatId);
-    await deleteDoc(chatRef);
+      const chatRef = doc(firestore, "chats", chatId);
+      await deleteDoc(chatRef);
 
-    // 5. Update local state
-    setChats(chats.filter(chat => chat.id !== chatId));
+      setChats(chats.filter(chat => chat.id !== chatId));
 
-    return true;
-  } catch (error) {
-    console.error("Error deleting chat:", error);
-    throw error;
-  }
-};
+      return true;
+    } catch (error) {
+      console.error("Error deleting chat:", error);
+      throw error;
+    }
+  };
 
-return { chats, fetchChats, createOrGetChat, deleteChat };
+  return { chats, fetchChats, createOrGetChat, deleteChat };
 };
 
 export default useChatService;

@@ -8,28 +8,36 @@ import {
   List,
   ListItemAvatar,
   ListItemText,
+  Skeleton,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import SearchMsgModal from "../../components/SideBar/Messages/SearchMsgModal";
 import useAuthStore from "../../components/store/useAuthStore";
 import useChatService from "../../hooks/useChatService";
 import ChatWindow from "../../components/SideBar/Messages/ChatWindow";
+import useChatStore from "../../components/store/useChatStore";
+import { doc, getDoc } from "firebase/firestore";
+import { firestore } from "../../components/Firebase/firebase";
 
 const Messages = () => {
   const { chats, fetchChats, createOrGetChat } = useChatService();
-  const [selectedChatId, setSelectedChatId] = useState(null); // Track selected chat ID
-  const [selectedUsername, setSelectedUsername] = useState(""); // Track selected chat username
-  const [selectedUser, setSelectedUser] = useState(null); // Track selected user
+  const [selectedChatId, setSelectedChatId] = useState(null);
+  const [selectedUsername, setSelectedUsername] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const authUser = useAuthStore((state) => state.user);
+  const [isLoading, setIsLoading] = useState(false);
+  const {setChats} = useChatStore();
 
   useEffect(() => {
     const loadChats = async () => {
       if (authUser?.userId) {
+        setIsLoading(true);
         try {
           const chatList = await fetchChats(authUser.userId);
-          // For each chat, get the other participant's info
           const chatsWithUserInfo = await Promise.all(
+            // Array.from(chatList).map(async (chat) => {
+
             chatList.map(async (chat) => {
               const otherUserId = chat.participants.find(
                 (id) => id !== authUser.userId
@@ -47,7 +55,9 @@ const Messages = () => {
           );
           setChats(chatsWithUserInfo);
         } catch (error) {
-          console.error("Error loading chats:", error);
+          console.log("Error loading chats:", error);
+        } finally {
+          setIsLoading(false);
         }
       }
     };
@@ -65,11 +75,9 @@ const Messages = () => {
   const handleUserClick = async (user) => {
     try {
       const chatId = await createOrGetChat(authUser.userId, user.id);
-      console.log("Chat ID:", chatId);
       setSelectedChatId(chatId);
       setSelectedUsername(user.username);
       setSelectedUser(user);
-      console.log("Selected User:", user);
       navigate(`/messages/${chatId}`);
     } catch (error) {
       console.error("Error selecting user for chat:", error);
@@ -98,19 +106,50 @@ const Messages = () => {
           padding: "8px",
         }}
       >
-        <Typography variant="h5" fontWeight={600} mb={3}>
+        <Typography
+          variant="h5"
+          fontWeight={600}
+          mb={3}
+          sx={{
+            userSelect: "none",
+          }}
+        >
           Messages
         </Typography>
 
         <Box flex={1} overflow="auto">
-          {chats.length > 0 ? (
+          {isLoading ? (
+            <List>
+              {[...Array(3)].map((item,idx) => (
+                <ListItem key={idx} sx={{ mb: 1 }}>
+                  <ListItemAvatar>
+                    <Skeleton variant="circular" width={40} height={40} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={<Skeleton width="80%" />}
+                    secondary={<Skeleton width="60%" />}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          ) : chats.length > 0 ? (
             <List>
               {chats.map((chat) => (
-                // console.log("chat>", chat),
                 <ListItem
-                  button
+                  component="div"
                   key={chat.id}
                   onClick={() => handleChatSelect(chat)}
+                  sx={{
+                    backgroundColor:
+                      chat.id === selectedChatId ? "background.paper" : "",
+                    borderBottom: "1px solid",
+                    borderColor: "divider",
+                    borderRadius: "8px",
+                    padding: "2px",
+                    marginBlock: "4px",
+                    userSelect: "none",
+                    cursor: "pointer",
+                  }}
                 >
                   <ListItemAvatar>
                     <Avatar
@@ -123,7 +162,19 @@ const Messages = () => {
                   </ListItemAvatar>
                   <ListItemText
                     primary={chat.username}
-                    secondary={chat.lastMessage || "No messages yet"}
+                    secondary={
+                      <Typography
+                        variant="body2"
+                        noWrap
+                        sx={{
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        {chat.lastMessage || "No messages yet"}
+                      </Typography>
+                    }
                   />
                 </ListItem>
               ))}
@@ -164,13 +215,23 @@ const Messages = () => {
               color="textSecondary"
               textAlign="center"
               mt={2}
+              sx={{
+                userSelect: "none",
+              }}
             >
               Select a chat to start messaging.
             </Typography>
             <Button
               variant="contained"
               onClick={handleDialogOpen}
-              sx={{ mt: 2 }}
+              sx={{
+                mt: 2,
+                backgroundColor: (theme) => theme.palette.background.primary,
+                "&:hover": {
+                  backgroundColor: (theme) => theme.palette.primary.main,
+                  color: (theme) => theme.palette.primary.contrastText,
+                },
+              }}
             >
               Search Users
             </Button>

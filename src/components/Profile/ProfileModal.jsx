@@ -243,6 +243,7 @@ const ProfileModal = ({
                 flex: 1,
                 overflowY: "auto",
                 padding: 2,
+                scrollbarColor: "transparent transparent",
               }}
             >
               {comments.map((comment, index) => (
@@ -353,10 +354,12 @@ const ProfileModal = ({
       <Dialog
         open={isConfirmOpen}
         onClose={cancelDelete}
-        PaperProps={{
-          sx: {
-            backgroundColor: "rgba(0,0,0,0.7)",
+        sx={{
+          "& .MuiDialog-paper": {
+            background: (theme) => theme.palette.background.default,
+            boxShadow: "0px 0px 8px 0px rgba(255,255,255,0.4)",
           },
+          backgroundColor: "rgba(0,0,0,0.7)",
         }}
       >
         <DialogTitle>Confirm Deletion</DialogTitle>
@@ -371,7 +374,12 @@ const ProfileModal = ({
             onClick={cancelDelete}
             size="small"
             sx={{
-              color: (theme) => theme.palette.text.primary,
+              backgroundColor: (theme) => theme.palette.primary.main,
+              color: (theme) => theme.palette.primary.contrastText,
+              "&:hover": {
+                backgroundColor: (theme) => theme.palette.background.primary,
+                color: (theme) => theme.palette.text.primary,
+              },
             }}
           >
             Cancel

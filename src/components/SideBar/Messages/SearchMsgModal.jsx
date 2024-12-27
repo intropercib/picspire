@@ -13,7 +13,6 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Divider,
 } from "@mui/material";
 import { Search as SearchIcon, Close as CloseIcon } from "@mui/icons-material";
 import useSearchUsers from "../../../hooks/useSearchUser";
@@ -37,6 +36,7 @@ const SearchMsgModal = ({ open, onClose, onUserSelect }) => {
     >
       <DialogTitle>Search Users</DialogTitle>
       <DialogContent>
+        {/* Search input field */}
         <Input
           placeholder="Search"
           value={searchQuery}
@@ -76,6 +76,7 @@ const SearchMsgModal = ({ open, onClose, onUserSelect }) => {
           }
         />
         <Box flex={1} overflow="auto">
+          {/* Display messages based on search state */}
           {searchQuery === "" ? (
             <Typography textAlign="center" mt={3} variant="body2">
               Enter a search query

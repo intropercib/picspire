@@ -9,14 +9,12 @@ import {
 } from "@mui/material";
 import AttachFileOutlinedIcon from "@mui/icons-material/AttachFileOutlined";
 import SendOutlinedIcon from "@mui/icons-material/SendOutlined";
-import AttachmentIcon from "@mui/icons-material/Attachment";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const MessagingInput = ({ onSend }) => {
   const [message, setMessage] = useState("");
   const [attachment, setAttachment] = useState(null);
   const [uploading, setUploading] = useState(false);
-
   const handleSend = async () => {
     if (!message.trim() && !attachment) return;
 
@@ -85,7 +83,8 @@ const MessagingInput = ({ onSend }) => {
         >
           <IconButton size="small" component="label">
             <AttachFileOutlinedIcon />
-            <input type="file" hidden onChange={handleAttachmentChange} />
+            <input type="file" hidden onChange={handleAttachmentChange} />{" "}
+            {/* File input */}
           </IconButton>
         </Badge>
       </Tooltip>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   AppBar,
   Toolbar,
@@ -16,13 +16,15 @@ import {
 } from "@mui/material";
 import { ArrowBack, MoreVert } from "@mui/icons-material";
 import useChatService from "../../../hooks/useChatService";
+import { useNavigate } from "react-router-dom";
 
-const MessagingHeader = ({ onBack, selectedUser}) => {
-  console.log("he",selectedUser);
-  const [anchorEl, setAnchorEl] = useState(null); // For the menu
-  const [openDialog, setOpenDialog] = useState(false); // For the delete confirmation dialog
+const MessagingHeader = ({ onBack, selectedUser }) => {
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [openDialog, setOpenDialog] = useState(false);
 
   const { deleteChat } = useChatService();
+
+  const navigate = useNavigate();
 
   // Open menu
   const handleMenuOpen = (event) => {
@@ -73,6 +75,7 @@ const MessagingHeader = ({ onBack, selectedUser}) => {
             "https://www.w3schools.com/howto/img_avatar.png"
           }
           alt={selectedUser.username}
+          onClick={() => navigate(`/${selectedUser.username}`)}
         />
 
         {/* Username */}
@@ -84,6 +87,7 @@ const MessagingHeader = ({ onBack, selectedUser}) => {
             whiteSpace: "nowrap",
             textOverflow: "ellipsis",
           }}
+          onClick={() => navigate(`/${selectedUser.username}`)}
         >
           {selectedUser.username}
         </Typography>
@@ -98,13 +102,29 @@ const MessagingHeader = ({ onBack, selectedUser}) => {
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
           onClose={handleMenuClose}
+          sx={{
+            "& .MuiMenu-paper": {
+              background: (theme) => theme.palette.background.default,
+              boxShadow: "0px 0px 10px 0px rgba(255,255,255,0.1)",
+            },
+          }}
         >
           <MenuItem onClick={handleDialogOpen}>Delete Conversation</MenuItem>
         </Menu>
       </Toolbar>
 
       {/* Delete Confirmation Dialog */}
-      <Dialog open={openDialog} onClose={handleDialogClose}>
+      <Dialog
+        open={openDialog}
+        onClose={handleDialogClose}
+        PaperProps={{
+          sx: {
+            boxShadow: "0px 0px 8px 0px rgba(255,255,255,0.1)",
+            background: (theme) => theme.palette.background.default,
+            userSelect: "none",
+          },
+        }}
+      >
         <DialogTitle>Delete Conversation</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -113,10 +133,25 @@ const MessagingHeader = ({ onBack, selectedUser}) => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
+          <Button
+            onClick={handleDialogClose}
+            sx={{
+              backgroundColor: (theme) => theme.palette.background.primary,
+              "&:hover": {
+                backgroundColor: (theme) => theme.palette.primary.main,
+                color: (theme) => theme.palette.primary.contrastText,
+              },
+            }}
+          >
             Cancel
           </Button>
-          <Button onClick={handleConfirmDelete} color="error">
+          <Button
+            onClick={handleConfirmDelete}
+            sx={{
+              backgroundColor: "red",
+              color: (theme) => theme.palette.text.primary,
+            }}
+          >
             Delete
           </Button>
         </DialogActions>

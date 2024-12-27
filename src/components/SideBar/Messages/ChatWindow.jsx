@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import MessagingInput from "./MessagingInput";
 import MessagingHeader from "./MessagingHeader";
 import {
@@ -14,7 +14,6 @@ import {
 } from "firebase/firestore";
 import { firestore } from "../../Firebase/firebase";
 import useChatStore from "../../store/useChatStore";
-import useAuthStore from "../../store/useAuthStore";
 
 const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
   const { messages, setMessages } = useChatStore();
@@ -23,10 +22,11 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
   useEffect(() => {
     if (!chatId) return;
 
-
+    // Reference to the messages collection in Firestore
     const messagesRef = collection(firestore, `chats/${chatId}/messages`);
     const q = query(messagesRef, orderBy("timestamp"));
 
+    // Listen for real-time updates to the messages collection
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const messageData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -42,6 +42,7 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
     if (!text.trim() && !attachment) return;
 
     try {
+      // Add a new message to the Firestore messages collection
       const messagesRef = collection(firestore, `chats/${chatId}/messages`);
       await addDoc(messagesRef, {
         sender: currentUserId,
@@ -50,7 +51,7 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
         timestamp: serverTimestamp(),
       });
 
-      // Update last message in chat document
+      // Update the last message and timestamp in the chat document
       const chatRef = doc(firestore, "chats", chatId);
       await updateDoc(chatRef, {
         lastMessage: attachment ? "Attachment" : text.trim(),
@@ -62,6 +63,7 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
   };
 
   useEffect(() => {
+    // Scroll to the bottom of the chat window when messages change
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
@@ -78,7 +80,14 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
     >
       <MessagingHeader onBack={onBack} selectedUser={selectedUser} />
 
-      <Box sx={{ flex: 1, overflowY: "auto", padding: 2 }}>
+      <Box
+        sx={{
+          flex: 1,
+          overflowY: "auto",
+          padding: 2,
+          scrollbarColor: "transparent transparent",
+        }}
+      >
         {messages.length > 0 ? (
           messages.map((message) => (
             <Box
@@ -90,7 +99,13 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
                 mb: 2,
               }}
             >
-              <Box>
+              <Box
+                sx={{
+                  background: (theme) => theme.palette.background.primary,
+                  padding: 1,
+                  borderRadius: 2,
+                }}
+              >
                 {message.attachment && (
                   <Box
                     sx={{
@@ -108,12 +123,20 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
                     />
                   </Box>
                 )}
-                <Typography>{message.text}</Typography>
+                <Typography
+                  sx={{
+                    maxWidth: "400px",
+                  }}
+                >
+                  {message.text}
+                </Typography>
               </Box>
             </Box>
           ))
         ) : (
-          <Typography>No messages yet. Start the conversation!</Typography>
+          <Typography sx={{ textAlign: "center" }}>
+            No messages yet. Start the conversation!
+          </Typography>
         )}
         <div ref={bottomRef}></div>
       </Box>

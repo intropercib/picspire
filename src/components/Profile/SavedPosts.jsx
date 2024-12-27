@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Typography, Grid2 as Grid, Box } from "@mui/material";
+import { Container, Typography, Grid2 as Grid, Box, Skeleton } from "@mui/material";
 import useAuthStore from "../store/useAuthStore";
 import usePostStore from "../store/usePostStore";
 import SavedPost from "./SavedPost";
@@ -21,7 +21,7 @@ const SavedPosts = () => {
   if (loadingPosts) {
     return (
       <Container>
-        <Typography>Loading Saved Posts...</Typography>
+        <Skeleton variant="rectangular" width="100%" height={200} />
       </Container>
     );
   }
@@ -37,7 +37,9 @@ const SavedPosts = () => {
   return (
     <Container>
       {savedPosts.length === 0 ? (
-        <Typography>No saved posts to display.</Typography>
+        <Typography component="div" sx={{
+          textAlign: "center",
+        }}>No saved posts to display.</Typography>
       ) : (
         <Grid
           container

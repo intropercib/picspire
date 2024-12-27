@@ -5,39 +5,25 @@ import useAuthStore from "../store/useAuthStore";
 import useGetUserProfile from "../../hooks/useGetUserProfile";
 import useFetchAllUsers from "../../hooks/useFetchAllUsers";
 import UserProfile from "./UserProfile";
+import SkeletonSuggested from "./SkeletonSuggested";
 
 const SuggestedProfile = () => {
   const authUser = useAuthStore((state) => state.user);
-  const { userLoading, userProfile } = useGetUserProfile(authUser?.username);
+  const { userLoading, userProfile } = useGetUserProfile(authUser.username);
   const { usersList, fetchLoading, error } = useFetchAllUsers();
-  const [isDataReady, setIsDataReady] = useState(false);
+  const userLength = usersList.length;
 
-  useEffect(() => {
-    let mounted = true;
-
-    if (mounted && userProfile && !userLoading) {
-      setIsDataReady(true);
-    }
-
-    return () => {
-      mounted = false;
-      setIsDataReady(false);
-    };
-  }, [userProfile, userLoading]);
-
-  if (!authUser?.username || userLoading || fetchLoading) {
-    return <Typography>Loading...</Typography>;
+  if (userLoading || fetchLoading) {
+    return <SkeletonSuggested />;
   }
 
   if (error) {
     return <Typography color="error">{error}</Typography>;
   }
 
-  usersList.filter((user) => user.id !== authUser.id);
-
   return (
     <Box sx={{ padding: "50px 10px" }}>
-      {isDataReady && userProfile && <UserProfile userdata={userProfile} />}
+      {userProfile && <UserProfile userdata={userProfile} />}
       <Typography variant="body2" sx={{ marginTop: 2, marginBottom: 2 }}>
         Suggested for you
       </Typography>

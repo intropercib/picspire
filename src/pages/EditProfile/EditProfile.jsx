@@ -23,8 +23,16 @@ import { doc, getDoc, updateDoc } from "firebase/firestore";
 import useAuthStore from "../../components/store/useAuthStore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { PhotoCamera } from "@mui/icons-material";
-import { collection, query, where, getDocs, writeBatch } from "firebase/firestore";
+import CloseIcon from "@mui/icons-material/Close";
 
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  writeBatch,
+} from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = () => {
   const [user] = useAuthState(auth);
@@ -147,7 +155,7 @@ const EditProfile = () => {
       setPicError(error.message || "Error updating profile picture.");
     }
   };
-
+  const navigate = useNavigate();
   return (
     <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
       <Container
@@ -163,10 +171,9 @@ const EditProfile = () => {
             borderBottom: 1,
             borderColor: "text.disabled",
             pb: 2,
+            position: "relative",
           }}
         >
-
-          
           <Avatar
             src={
               authUser.profilePicURL ||
@@ -179,8 +186,13 @@ const EditProfile = () => {
               border: "2px solid",
             }}
           />
-          
-          <Box textAlign={{ xs: "center", sm: "left" }}>
+
+          <Box
+            textAlign={{ xs: "center", sm: "left" }}
+            sx={{
+              userSelect: "none",
+            }}
+          >
             <Typography variant="body1">{authUser.fullName}</Typography>
             <Typography variant="body2">{authUser.username}</Typography>
             <Button
@@ -189,15 +201,35 @@ const EditProfile = () => {
                 mt: 1,
                 fontSize: "small",
                 px: 2,
-                bgcolor: "divider",
-                color: "text.primary",
+                backgroundColor: (theme) => theme.palette.primary.main,
+                color: (theme) => theme.palette.primary.contrastText,
+                "&:hover": {
+                  backgroundColor: (theme) => theme.palette.background.primary,
+                  color: (theme) => theme.palette.text.primary,
+                },
               }}
               onClick={handleChangeProfilePic}
               startIcon={<PhotoCamera />}
             >
-              {uploadingPic ?  (<CircularProgress size="14px" />): "Change Photo"}
+              {uploadingPic ? <CircularProgress size="14px" /> : "Change Photo"}
             </Button>
           </Box>
+          <Stack
+            sx={{
+              position: "absolute",
+              right: "10px",
+              top: "10px",
+              cursor: "pointer",
+              padding: 1,
+              borderRadius: "50%",
+              backgroundColor: "rgba(0,0,0,0.3)",
+              "&:hover": {
+                backgroundColor: "rgba(0,0,0,0.9)",
+              },
+            }}
+          >
+            <CloseIcon onClick={() => navigate(`/${authUser.username}`)} />
+          </Stack>
         </Stack>
 
         <Stack
@@ -297,6 +329,14 @@ const EditProfile = () => {
               color="primary"
               onClick={handleProfileUpdate}
               disabled={loadingUpdate}
+              sx={{
+                backgroundColor: (theme) => theme.palette.primary.main,
+                color: (theme) => theme.palette.primary.contrastText,
+                "&:hover": {
+                  backgroundColor: (theme) => theme.palette.background.primary,
+                  color: (theme) => theme.palette.text.primary,
+                },
+              }}
             >
               {loadingUpdate ? "Saving..." : "Save Profile"}
             </Button>
@@ -346,6 +386,15 @@ const EditProfile = () => {
               color="primary"
               onClick={handlePasswordChange}
               disabled={loadingUpdate}
+              sx={{
+                backgroundColor: (theme) => theme.palette.primary.main,
+                color: (theme) => theme.palette.primary.contrastText,
+                "&:hover": {
+                  backgroundColor: (theme) => theme.palette.background.primary,
+                  color: (theme) => theme.palette.text.primary,
+                },
+              }}
+              
             >
               {loadingUpdate ? "Saving..." : "Change Password"}
             </Button>

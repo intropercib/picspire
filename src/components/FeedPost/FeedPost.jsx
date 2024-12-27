@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Avatar,
   Box,
@@ -8,7 +8,6 @@ import {
   Typography,
   IconButton,
   Link,
-  Skeleton,
 } from "@mui/material";
 import {
   MoreHoriz as MoreHorizIcon,
@@ -23,7 +22,6 @@ import BookmarkBorderSharpIcon from "@mui/icons-material/BookmarkBorderSharp";
 import BookmarkSharpIcon from "@mui/icons-material/BookmarkSharp";
 import MapsUgcSharpIcon from "@mui/icons-material/MapsUgcSharp";
 import formatTime from "../../utils/formatTime";
-import SkeletonFeedPost from "./SkeletonFeedPost";
 
 const FeedPost = ({ post }) => {
   const authUser = useAuthStore((state) => state.user);
@@ -53,18 +51,6 @@ const FeedPost = ({ post }) => {
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  if (loading) {
-    return <SkeletonFeedPost />;
-  }
   return (
     <>
       <Paper
@@ -76,7 +62,6 @@ const FeedPost = ({ post }) => {
           boxShadow: 3,
           maxWidth: "100%",
           width: { xs: "100%", sm: "500px", md: "550px", lg: "450px" },
-          border: "2px solid red",
         }}
       >
         {/* Header */}
@@ -110,9 +95,6 @@ const FeedPost = ({ post }) => {
                 : ""}
             </Typography>
           </Stack>
-          {/* <IconButton>
-            <MoreHorizIcon />
-          </IconButton> */}
         </Stack>
 
         {/* Image */}
@@ -148,12 +130,16 @@ const FeedPost = ({ post }) => {
 
         {/* Actions */}
         <Box>
-          <Stack
-            direction="row"
-            justifyContent="space-between"
-            alignItems="center"
+          <Box
+            sx={{
+              margin: "0px",
+              padding: "0px",
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
           >
-            <Stack direction="row" spacing={2}>
+            <Stack direction="row">
               <IconButton onClick={handleLike}>
                 {isLiked ? (
                   <FavoriteSharpIcon
@@ -170,7 +156,7 @@ const FeedPost = ({ post }) => {
               </IconButton>
               <IconButton onClick={() => setIsProfileModalOpen(true)}>
                 <MapsUgcSharpIcon
-                  sx={{ fontSize: { xs: "20px", lg: "30px" } }}
+                  sx={{ fontSize: { xs: "20px", lg: "28px" } }}
                 />
               </IconButton>
             </Stack>
@@ -185,13 +171,13 @@ const FeedPost = ({ post }) => {
                 />
               )}
             </IconButton>
-          </Stack>
+          </Box>
 
           {/* Likes and Caption */}
-          <Box mt={1}>
+          <Box>
             <Typography
               variant="body1"
-              sx={{ fontSize: { xs: "14px", md: "16px" }, lineHeight: 1.2 }}
+              sx={{ fontSize: { xs: "14px", md: "16px" } }}
             >
               {likeCount} {likeCount <= 1 ? "like" : "likes"}
             </Typography>
@@ -209,7 +195,7 @@ const FeedPost = ({ post }) => {
               href="#"
               onClick={() => setIsProfileModalOpen(true)}
               underline="hover"
-              sx={{ cursor: "pointer", mt: 1, display: "block" }}
+              sx={{ cursor: "pointer", display: "block", fontSize: 14 }}
             >
               See all {comments.length} comment{comments.length > 1 ? "s" : ""}
             </Link>
@@ -223,6 +209,7 @@ const FeedPost = ({ post }) => {
               fullWidth
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
+              autoComplete="off"
               sx={{
                 "& .MuiInputBase-root": {
                   fontSize: "15px",

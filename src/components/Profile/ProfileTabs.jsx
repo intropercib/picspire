@@ -10,7 +10,6 @@ import {
 import ProfilePosts from "./ProfilePosts";
 import GridOnIcon from "@mui/icons-material/GridOn";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import { useTheme } from "@mui/material/styles";
 import SavedPosts from "./SavedPosts";
 
@@ -78,9 +77,7 @@ const ProfileTabs = () => {
         <ProfilePosts />
       </TabPanel>
       <TabPanel index={1}>
-        <Typography variant="body1">
           <SavedPosts />
-        </Typography>
       </TabPanel>
     </Stack>
   );

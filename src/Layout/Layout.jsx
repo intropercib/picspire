@@ -6,7 +6,7 @@ import useAuthStore from "../components/store/useAuthStore";
 
 const Layout = ({ children }) => {
   const { pathname } = useLocation();
-  const [user, loading, error] = [useAuthStore((state) => state.user), false, null]; // Removed react-firebase-hooks
+  const [user, loading, error] = [useAuthStore((state) => state.user), false, null];
   const [isInitialized, setIsInitialized] = useState(false);
   const sideBarRender = pathname !== "/login" && pathname !== "/signup" && user;
 
@@ -18,9 +18,6 @@ const Layout = ({ children }) => {
     initialize();
   }, []);
 
-  // if (!isInitialized) {
-  //   return <div>Loading...</div>;
-  // }
   const isMessageRender = location.pathname.includes("/message")
 
   return (

@@ -11,15 +11,12 @@ import {
   Instagram as InstagramIcon,
   Home as HomeIcon,
   Search as SearchIcon,
-  Explore as ExploreIcon,
   MovieCreationOutlined as MovieCreationOutlinedIcon,
-  MapsUgcRounded as MapsUgcRoundedIcon,
-  FavoriteBorderRounded as FavoriteBorderRoundedIcon,
   ControlPointRounded as ControlPointRoundedIcon,
   AccountCircleOutlined as AccountCircleOutlinedIcon,
   MenuRounded as MenuRoundedIcon,
-  Search,
 } from "@mui/icons-material";
+import ForumOutlinedIcon from "@mui/icons-material/ForumOutlined";
 import useAuthStore from "../store/useAuthStore";
 import SearchBar from "./Search/SearchBar";
 import Create from "./Create/Create";
@@ -99,7 +96,7 @@ const SideBar = () => {
     },
     // { title: "Explore", icon: <ExploreIcon />, navTo: "/explore" },
     { title: "Reels", icon: <MovieCreationOutlinedIcon />, navTo: "/reels" },
-    { title: "Messages", icon: <MapsUgcRoundedIcon />, navTo: "/messages" },
+    { title: "Messages", icon: <ForumOutlinedIcon />, navTo: "/messages" },
     // {
     //   title: "Notifications",
     //   icon: <FavoriteBorderRoundedIcon />,
@@ -140,7 +137,7 @@ const SideBar = () => {
         >
           <Box
             sx={{
-              display:isMessageRender?"flex": { xs: "flex", lg: "none" },
+              display: isMessageRender ? "flex" : { xs: "flex", lg: "none" },
               justifyContent: "center",
               alignItems: "center",
               padding: "20px 0",
@@ -170,7 +167,7 @@ const SideBar = () => {
 
           <Stack sx={{ paddingTop: "50px" }}>
             <ListItem
-              onClick={() => setIsMoreOpen(true)} 
+              onClick={() => setIsMoreOpen(true)}
               sx={{
                 textDecoration: "none",
                 borderRadius: "10px",
@@ -181,20 +178,24 @@ const SideBar = () => {
                 alignItems: "center",
                 position: "absolute",
                 bottom: "25px",
-                width: isMessageRender ?"60px": {
-                  xs: "40px",
-                  lg: "90%",
-                },
+                width: isMessageRender
+                  ? "60px"
+                  : {
+                      xs: "40px",
+                      lg: "90%",
+                    },
                 cursor: "pointer",
               }}
             >
-              <ListItemIcon sx={{justifyContent: "center" }}>
+              <ListItemIcon sx={{ justifyContent: "center" }}>
                 <MenuRoundedIcon sx={{ fontSize: "30px" }} />
               </ListItemIcon>
               <ListItemText
                 primary="More"
                 sx={{
-                  display: isMessageRender? "none": { xs: "none", lg: "block" },
+                  display: isMessageRender
+                    ? "none"
+                    : { xs: "none", lg: "block" },
                   color: (theme) => theme.palette.text.primary,
                 }}
               />

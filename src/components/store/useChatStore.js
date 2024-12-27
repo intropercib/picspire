@@ -1,9 +1,9 @@
 import {create} from "zustand";
 
 const useChatStore = create((set) => ({
-  chats: [], // List of chat metadata
-  messages: [], // Messages for the current chat
-  currentChatId: null, // Currently selected chat ID
+  chats: [], 
+  messages: [], 
+  currentChatId: null, 
   setChats: (chats) => set({ chats }),
   setMessages: (messages) => set({ messages }),
   setCurrentChatId: (chatId) => set({ currentChatId: chatId }),

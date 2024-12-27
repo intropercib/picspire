@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Box,
   Button,
@@ -33,7 +33,6 @@ const Create = ({ open, onClose }) => {
   } = useCreatePost(onClose);
 
   return (
-   
     <Dialog
       open={open}
       onClose={handleClose}
@@ -41,11 +40,11 @@ const Create = ({ open, onClose }) => {
       PaperProps={{
         sx: {
           borderRadius: 2,
-          maxWidth: "500px",
+          maxWidth: "650px",
           boxShadow: "0px 0px 8px 0px rgba(255,255,255,0.1)",
         },
       }}
-      >
+    >
       <DialogTitle
         sx={{
           display: "flex",
@@ -56,7 +55,7 @@ const Create = ({ open, onClose }) => {
           borderColor: "divider",
           backgroundColor: "background.default",
         }}
-        >
+      >
         {step === 2 && (
           <IconButton onClick={goToPreviousStep} size="small">
             <ArrowBackIcon />
@@ -65,7 +64,7 @@ const Create = ({ open, onClose }) => {
         <Typography
           variant="body1"
           sx={{ fontWeight: "bold", flex: 1, textAlign: "center" }}
-          >
+        >
           {step === 1 ? "Create new post" : "Edit post"}
         </Typography>
         <IconButton onClick={handleClose} size="small">
@@ -76,16 +75,15 @@ const Create = ({ open, onClose }) => {
       <DialogContent sx={{ p: 0, display: "flex", flexDirection: "row" }}>
         {step === 1 ? (
           <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
-            height: "500px",
-            bgcolor: "background.default",
-            
-          }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              width: "100%",
+              height: "500px",
+              bgcolor: "background.default",
+            }}
           >
             <AddPhotoAlternateIcon sx={{ fontSize: 60, mb: 2 }} />
             <Typography variant="h6" gutterBottom>
@@ -102,14 +100,14 @@ const Create = ({ open, onClose }) => {
                   color: (theme) => theme.palette.primary.contrastText,
                 },
               }}
-              >
+            >
               Select from computer
               <input
                 type="file"
                 hidden
                 accept="image/*"
                 onChange={handleImageSelect}
-                />
+              />
             </Button>
           </Box>
         ) : (
@@ -122,16 +120,16 @@ const Create = ({ open, onClose }) => {
                 justifyContent: "center",
                 bgcolor: "background.default",
               }}
-              >
+            >
               {selectedImage && (
                 <img
-                src={selectedImage}
-                alt="Selected"
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
-                  objectFit: "contain",
-                }}
+                  src={selectedImage}
+                  alt="Selected"
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: "100%",
+                    objectFit: "contain",
+                  }}
                 />
               )}
             </Box>
@@ -141,8 +139,9 @@ const Create = ({ open, onClose }) => {
               sx={{
                 width: "60%",
                 padding: "5px",
+                backgroundColor: "background.default",
               }}
-              >
+            >
               <TextField
                 multiline
                 rows={4}
@@ -157,16 +156,20 @@ const Create = ({ open, onClose }) => {
                     fontSize: "14px",
                   },
                 }}
-                />
+              />
               <Button
                 variant="contained"
                 fullWidth
                 onClick={handleShare}
                 disabled={!selectedImage || uploading}
                 sx={{
-                  color: "text.primary",
+                  backgroundColor: (theme) => theme.palette.background.primary,
+                  "&:hover": {
+                    backgroundColor: (theme) => theme.palette.primary.main,
+                    color: (theme) => theme.palette.primary.contrastText,
+                  },
                 }}
-                >
+              >
                 {uploading ? <CircularProgress size={24} /> : "Post"}
               </Button>
             </Stack>

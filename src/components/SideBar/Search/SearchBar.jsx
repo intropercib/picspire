@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Box,
   Input,
@@ -65,7 +65,7 @@ const SearchBar = ({ open, onClose }) => {
           <Input
             placeholder="Search"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => setSearchQuery(e.target.value)} // Update search query
             disableUnderline
             fullWidth
             autoFocus
@@ -123,8 +123,8 @@ const SearchBar = ({ open, onClose }) => {
                     backgroundColor: (theme) =>
                       theme.palette.background.primary,
                   },
-                   borderBottom:"1px solid",
-                  borderColor:"divider"
+                  borderBottom: "1px solid",
+                  borderColor: "divider",
                 }}
                 onClick={() => handleUserClick(user.username)}
               >
