@@ -18,7 +18,6 @@ const About = () => {
         padding: "20px",
         textAlign: "center",
         margin: "auto",
-        border: "2px solid red",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
