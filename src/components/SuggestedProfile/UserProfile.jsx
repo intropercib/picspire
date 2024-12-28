@@ -12,7 +12,7 @@ const UserProfile = ({userdata}) => {
           <Avatar
             src={
               userdata.profilePicURL ||
-            "../../assets/defaultAvatar.jpg"
+            "/defaultAvatar.jpg"
             }
             alt={`${userdata.username}'s profile`}
             sx={{ height: 50, width: 50 }}

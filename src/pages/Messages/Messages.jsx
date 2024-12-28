@@ -153,7 +153,7 @@ const Messages = () => {
                     <Avatar
                       src={
                         chat.avatar ||
-                        "../../assets/defaultAvatar.jpg"
+                        "/defaultAvatar.jpg"
                       }
                       alt={chat.username}
                     />

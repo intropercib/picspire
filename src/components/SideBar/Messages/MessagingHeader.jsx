@@ -65,7 +65,7 @@ const MessagingHeader = ({ onBack, selectedUser }) => {
         <Avatar
           src={
             selectedUser.avatar ||
-          "../../../assets/defaultAvatar.jpg"
+          "/defaultAvatar.jpg"
           }
           alt={selectedUser.username}
           onClick={() => navigate(`/${selectedUser.username}`)}

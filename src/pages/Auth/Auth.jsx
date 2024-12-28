@@ -1,9 +1,9 @@
 import React from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import LoginForm from "../../components/AuthForm/LoginForm";
-import microsoft from "../../assets/microsoft.png";
-import playstore from "../../assets/playstore.png";
-import psIcon from "../../assets/psIcon.png";
+import microsoft from "/microsoft.png";
+import playstore from "/playstore.png";
+import psIcon from "/psIcon.png";
 const Auth = () => {
   return (
     <Container
