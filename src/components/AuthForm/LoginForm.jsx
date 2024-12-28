@@ -119,9 +119,9 @@ const LoginForm = () => {
           >
             {loading ? "Logging in..." : "Log in"}
           </Button>
-          <Divider>OR</Divider>
+          {/* <Divider>OR</Divider> */}
 
-          <Typography
+          {/* <Typography
             sx={{
               textDecoration: "none",
               color: (theme) => theme.palette.secondary.main,
@@ -139,7 +139,7 @@ const LoginForm = () => {
           >
             <GoogleIcon />
             {loading ? "Logging in..." : "Login with Google"}
-          </Typography>
+          </Typography> */}
         </Stack>
 
         <Typography
