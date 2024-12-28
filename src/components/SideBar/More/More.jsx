@@ -7,19 +7,21 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import useLogOut from "../../../hooks/useLogOut";
 
 const More = ({ open, onClose }) => {
   const navigate = useNavigate();
 
   const handleOpenAbout = () => {
-    navigate('/about');
+    navigate("/about");
     onClose();
   };
 
   const handleOpenSettings = () => {
-    navigate('/settings');
+    navigate("/settings");
     onClose();
   };
+  const { handleLogOut } = useLogOut();
 
   return (
     <Dialog
@@ -36,17 +38,17 @@ const More = ({ open, onClose }) => {
     >
       <DialogContent
         sx={{
-          margin: '0',
-          padding: '0',
+          margin: "0",
+          padding: "0",
           backgroundColor: (theme) => theme.palette.background.default,
         }}
       >
         <List
           sx={{
             backgroundColor: (theme) => theme.palette.background.default,
-            borderRadius: '10px',
-            fontSize: '12px',
-            padding: '2px',
+            borderRadius: "10px",
+            fontSize: "12px",
+            padding: "2px",
             width: "100%",
           }}
         >
@@ -55,6 +57,9 @@ const More = ({ open, onClose }) => {
           </ListItem>
           <ListItem button onClick={handleOpenAbout}>
             <ListItemText primary="About" />
+          </ListItem>
+          <ListItem button onClick={handleLogOut}>
+            <ListItemText primary="Logout" />
           </ListItem>
         </List>
       </DialogContent>

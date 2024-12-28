@@ -11,7 +11,6 @@ const useLogOut = () => {
         try {
             await signOut();
             userLogOut();
-            console.log("User logged out successfully");
         } catch (error) {
             console.error("Logout error:", error.message || error);
         }
