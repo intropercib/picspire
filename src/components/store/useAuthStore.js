@@ -159,7 +159,7 @@ const useAuthStore = create((set, get) => ({
       
       if (!userDoc.exists()) {
         const newUser = {
-          uid: googleUser.uid,
+          userId: googleUser.uid,
           email: googleUser.email,
           username: googleUser.email.split('@')[0],
           fullName: googleUser.displayName,
