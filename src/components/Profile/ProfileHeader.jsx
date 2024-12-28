@@ -146,7 +146,7 @@ const ProfileHeader = () => {
         <Avatar
           src={
             userProfile.profilePicURL ||
-            "/src/assets/defaultAvatar.jpg"
+            "../../assets/defaultAvatar.jpg"
           }
           alt={`${userProfile?.username}'s profile`}
           sx={{

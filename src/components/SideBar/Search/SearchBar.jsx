@@ -131,7 +131,7 @@ const SearchBar = ({ open, onClose }) => {
                 <Avatar
                   src={
                     user.profilePicURL ||
-                    "/src/assets/defaultAvatar.jpg"
+                    "../../../assets/defaultAvatar.jpg"
                   }
                   sx={{ width: 44, height: 44 }}
                 />

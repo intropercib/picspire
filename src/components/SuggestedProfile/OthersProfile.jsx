@@ -33,7 +33,8 @@ const OthersProfile = ({ user }) => {
         <Avatar
           src={
             user.profilePicURL ||
-           "/src/assets/defaultAvatar.jpg"
+          "../../assets/defaultAvatar.jpg"
+
           }
           alt={`${user.username} Avatar`}
           sx={{ height: 50, width: 50, cursor: "pointer" }}

@@ -254,7 +254,7 @@ const ProfileModal = ({
                   <Avatar
                     src={
                       comment.profilePicURL ||
-                      "/src/assets/defaultAvatar.jpg"
+                      "../../assets/defaultAvatar.jpg"
                     }
                     component={NavLink}
                     to={`/${comment.username}`}

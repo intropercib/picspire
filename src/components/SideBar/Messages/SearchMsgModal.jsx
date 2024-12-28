@@ -106,7 +106,7 @@ const SearchMsgModal = ({ open, onClose, onUserSelect }) => {
                 <Avatar
                   src={
                     user.profilePicURL ||
-                    "assets/images/defaultAvatar.jpg"
+                    "../../../assets/defaultAvatar.jpg"
                   }
                   sx={{ width: 44, height: 44 }}
                 />

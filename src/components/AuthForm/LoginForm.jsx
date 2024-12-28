@@ -69,7 +69,8 @@ const LoginForm = () => {
           }}
         >
           <Stack alignItems="center" justifyContent="center">
-            <img src="/src/assets/logo.png" alt="logo" width="150px" />
+            {/* <img src="src/assets/logo.png" alt="logo" width="150px" /> */}
+            <img src="../../assets/logo.png" alt="logo" width="150px" />
           </Stack>
 
           <Stack spacing={2}>

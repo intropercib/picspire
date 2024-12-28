@@ -173,7 +173,7 @@ const EditProfile = () => {
           <Avatar
             src={
               authUser.profilePicURL ||
-              "/src/assets/defaultAvatar.jpg"
+              "../../assets/defaultAvatar.jpg"
             }
             alt={`${authUser.username}'s profile`}
             sx={{

@@ -74,7 +74,7 @@ const FeedPost = ({ post }) => {
             <Avatar
               src={
                 post.authorProfilePicURL ||
-                "/src/assets/defaultAvatar.jpg"
+                "../../assets/defaultAvatar.jpg"
               }
               onClick={() => navigate(`/${post.authorUsername}`)}
             />

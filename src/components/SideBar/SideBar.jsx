@@ -158,7 +158,7 @@ const SideBar = () => {
               padding: "10px 0",
             }}
           >
-            <img src="/src/assets/logo.png" alt="logo" width="150px" />
+            <img src="../../assets/logo.png" alt="logo" width="150px" />
           </Box>
 
           {sideBarItems.map((item, index) => (
