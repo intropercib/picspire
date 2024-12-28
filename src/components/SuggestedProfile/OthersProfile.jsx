@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Stack, Typography, Avatar } from "@mui/material";
 import useAuthStore from "../store/useAuthStore";
 import useFollowUnfollow from "../../hooks/useFollowUnfollow";
+import { useNavigate } from "react-router-dom";
 
 const OthersProfile = ({ user }) => {
   const authUser = useAuthStore((state) => state.user);
@@ -21,6 +22,7 @@ const OthersProfile = ({ user }) => {
   if (isLocalFollowing !== isFollowing) {
     setIsLocalFollowing(isFollowing);
   }
+  const navigate = useNavigate();
 
   return (
     <Stack direction="row" justifyContent="space-between" alignItems="center"  sx={{
@@ -29,7 +31,12 @@ const OthersProfile = ({ user }) => {
           borderRadius: "8px",
           padding: 1,
         }}>
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack direction="row" spacing={2} alignItems="center"
+      onClick={
+        () => {
+          navigate(`/${user.username}`);
+        }
+      }>
         <Avatar
           src={
             user.profilePicURL ||
