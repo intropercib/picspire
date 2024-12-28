@@ -7,14 +7,15 @@ import {
   Divider,
   IconButton,
 } from "@mui/material";
-import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 import useSignUpWithEmailPassword from "../../hooks/useSignUpWithEmailPassword";
 import FormSnackbar from "./FormSnackBar";
 import { FormTextField } from "./FormTextField";
+import useAuthStore from "../store/useAuthStore";
+import GoogleIcon from "@mui/icons-material/Google";
 
 const SignUpForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,11 +27,9 @@ const SignUpForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validate input fields
     if (!validate()) return;
 
     try {
-      // Check if username or email already exists
       const { isUsernameTaken, isEmailTaken } = await validateUserNameAndEmail(
         inputs.username,
         inputs.email
@@ -44,7 +43,6 @@ const SignUpForm = () => {
         return;
       }
 
-      // Proceed with sign-up
       const result = await signup(inputs);
       if (result === "success") {
         showAlert("User added successfully", "success");
@@ -59,8 +57,20 @@ const SignUpForm = () => {
     }
   };
 
-  // Reset the snackbar
   const handleSnackbarClose = () => showAlert("", "");
+
+  const loginWithGoogle = useAuthStore((state) => state.loginWithGoogle);
+  const navigate = useNavigate();
+  const handleGoogleLogin = async () => {
+    try {
+      const success = await loginWithGoogle();
+      if (success) {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+    }
+  };
 
   return (
     <Box
@@ -91,13 +101,25 @@ const SignUpForm = () => {
           <Typography variant="h6" align="center">
             Sign up to see photos and videos from your friends.
           </Typography>
+
           <Button
-            startIcon={<FacebookRoundedIcon />}
+            startIcon={<GoogleIcon />}
             variant="contained"
             color="primary"
             size="small"
+            onClick={handleGoogleLogin}
+            sx={{
+              cursor: "pointer",
+              backgroundColor: (theme) => theme.palette.primary.main,
+              color: (theme) => theme.palette.primary.contrastText,
+              "&:hover": {
+                opacity: 0.8,
+                color: (theme) => theme.palette.text.primary,
+                backgroundColor: (theme) => theme.palette.background.primary,
+              },
+            }}
           >
-            Login with Facebook
+            Login with Google
           </Button>
           <Divider>OR</Divider>
           <FormTextField
@@ -152,6 +174,14 @@ const SignUpForm = () => {
             onClick={handleSubmit}
             disabled={loading}
             fullWidth
+            sx={{
+              backgroundColor: (theme) => theme.palette.primary.main,
+              color: (theme) => theme.palette.primary.contrastText,
+              "&:hover": {
+                color: (theme) => theme.palette.text.primary,
+                backgroundColor: (theme) => theme.palette.background.primary,
+              },
+            }}
           >
             {loading ? "Signing Up..." : "Sign Up"}
           </Button>
@@ -159,10 +189,14 @@ const SignUpForm = () => {
         <Box sx={{ border: "1px solid", borderColor: "divider", mt: 2, p: 2 }}>
           <Typography variant="body2" align="center">
             Have an account?{" "}
-            <Typography component={Link} to="/login" sx={{
-              textDecoration: "none",
-              color: (theme) => theme.palette.secondary.main,
-            }}>
+            <Typography
+              component={Link}
+              to="/login"
+              sx={{
+                textDecoration: "none",
+                color: (theme) => theme.palette.secondary.main,
+              }}
+            >
               Login
             </Typography>
           </Typography>

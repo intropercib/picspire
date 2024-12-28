@@ -17,14 +17,12 @@ const useSignUpWithEmailPassword = () => {
   const [createUserWithEmailAndPassword, user, loading, error] = useCreateUserWithEmailAndPassword(auth);
   const loginUser = useAuthStore((state) => state.login);
 
-  // Set input values
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputs((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
-  // Validate user inputs
   const validate = () => {
     const newErrors = {};
     let hasError = false;
@@ -55,12 +53,10 @@ const useSignUpWithEmailPassword = () => {
       hasError = true;
     }
 
-    // Error for helper text
     setErrors(newErrors);
     return !hasError;
   };
 
-  // Validate if username and email are already taken
   const validateUserNameAndEmail = async (username, email) => {
     const usernameQuery = query(collection(firestore, "users"), where("username", "==", username));
     const emailQuery = query(collection(firestore, "users"), where("email", "==", email));
@@ -73,7 +69,6 @@ const useSignUpWithEmailPassword = () => {
     };
   };
 
-  // Sign up function
   const signup = async (inputs) => {
     try {
       const { isUsernameTaken, isEmailTaken } = await validateUserNameAndEmail(inputs.username, inputs.email);

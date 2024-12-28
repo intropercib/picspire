@@ -36,7 +36,6 @@ const SearchMsgModal = ({ open, onClose, onUserSelect }) => {
     >
       <DialogTitle>Search Users</DialogTitle>
       <DialogContent>
-        {/* Search input field */}
         <Input
           placeholder="Search"
           value={searchQuery}
@@ -76,7 +75,6 @@ const SearchMsgModal = ({ open, onClose, onUserSelect }) => {
           }
         />
         <Box flex={1} overflow="auto">
-          {/* Display messages based on search state */}
           {searchQuery === "" ? (
             <Typography textAlign="center" mt={3} variant="body2">
               Enter a search query
@@ -108,7 +106,7 @@ const SearchMsgModal = ({ open, onClose, onUserSelect }) => {
                 <Avatar
                   src={
                     user.profilePicURL ||
-                    "https://www.w3schools.com/howto/img_avatar.png"
+                    "assets/images/defaultAvatar.jpg"
                   }
                   sx={{ width: 44, height: 44 }}
                 />

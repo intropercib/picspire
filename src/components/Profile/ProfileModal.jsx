@@ -153,7 +153,7 @@ const ProfileModal = ({
           >
             <img
               src={
-                postImage || "https://www.w3schools.com/howto/img_avatar.png"
+                postImage || "/src/assets/defaultAvatar.jpg"
               }
               alt="Post"
               style={{
@@ -177,7 +177,6 @@ const ProfileModal = ({
             )}
           </Box>
 
-          {/* Comments Section */}
           <Box
             sx={{
               flex: 1,
@@ -187,7 +186,6 @@ const ProfileModal = ({
               height: "100%",
             }}
           >
-            {/* Header */}
             <DialogTitle
               sx={{
                 display: "flex",
@@ -209,7 +207,7 @@ const ProfileModal = ({
                 <Avatar
                   src={
                     profilePicURL ||
-                    "https://www.w3schools.com/howto/img_avatar.png"
+                    "/src/assets/defaultAvatar.jpg"
                   }
                 />
                 <Typography
@@ -237,7 +235,6 @@ const ProfileModal = ({
             </Box>
             <Divider />
 
-            {/* Comments List */}
             <Box
               sx={{
                 flex: 1,
@@ -257,7 +254,7 @@ const ProfileModal = ({
                   <Avatar
                     src={
                       comment.profilePicURL ||
-                      "https://www.w3schools.com/howto/img_avatar.png"
+                      "/src/assets/defaultAvatar.jpg"
                     }
                     component={NavLink}
                     to={`/${comment.username}`}
@@ -350,7 +347,6 @@ const ProfileModal = ({
         </DialogContent>
       </Dialog>
 
-      {/* Confirmation Dialog */}
       <Dialog
         open={isConfirmOpen}
         onClose={cancelDelete}

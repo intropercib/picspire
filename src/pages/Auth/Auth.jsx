@@ -1,10 +1,9 @@
 import React from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import LoginForm from "../../components/AuthForm/LoginForm";
-import microsoft from '../../assets/microsoft.png'; 
-import playstore from '../../assets/playstore.png';
-import authImage from '../../assets/auth.png'; 
-
+import microsoft from "../../assets/microsoft.png";
+import playstore from "../../assets/playstore.png";
+import psIcon from "../../assets/psIcon.png";
 const Auth = () => {
   return (
     <Container
@@ -18,19 +17,14 @@ const Auth = () => {
     >
       <Box
         sx={{
-          height: "85%",
+          height: "50%",
           display: {
             xs: "none",
             md: "block",
           },
         }}
       >
-        <img
-          src={authImage}
-          alt="authImage"
-          width="100%"
-          height="100%"
-        />
+        <img src={psIcon} alt="authImage" width="100%" height="100%" />
       </Box>
       <Box
         sx={{
@@ -66,18 +60,10 @@ const Auth = () => {
             }}
           >
             <Box>
-              <img
-                src={microsoft}
-                alt="microsoft"
-                height="45px"
-              />
+              <img src={microsoft} alt="microsoft" height="45px" />
             </Box>
             <Box>
-              <img
-                src={playstore}
-                alt="playstore"
-                height="45px"
-              />
+              <img src={playstore} alt="playstore" height="45px" />
             </Box>
           </Stack>
         </Stack>

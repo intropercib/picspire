@@ -47,7 +47,6 @@ const ProfileHeader = () => {
     navigate("/settings");
   };
 
-  // Loading and error states
   if (profileLoading) {
     return <SkeletonProfileHeader />;
   }
@@ -144,11 +143,10 @@ const ProfileHeader = () => {
           padding: 2,
         }}
       >
-        {/* Profile Avatar */}
         <Avatar
           src={
-            userProfile?.profilePicURL ||
-            "https://www.w3schools.com/howto/img_avatar.png"
+            userProfile.profilePicURL ||
+            "/src/assets/defaultAvatar.jpg"
           }
           alt={`${userProfile?.username}'s profile`}
           sx={{
@@ -204,7 +202,6 @@ const ProfileHeader = () => {
               </Button>
             )}
 
-            {/* Edit profile options for own profile */}
             {visitingOwnProfile && (
               <Stack
                 direction="row"
@@ -239,7 +236,6 @@ const ProfileHeader = () => {
             )}
           </Stack>
 
-          {/* Stats */}
           <Stack
             direction="row"
             spacing={{ xs: 1, sm: 2 }}
@@ -282,7 +278,6 @@ const ProfileHeader = () => {
             </Typography>
           </Stack>
 
-          {/* Bio */}
           <Stack textAlign={{ xs: "center", sm: "left" }}>
             <Typography variant="body1">{userProfile?.username}</Typography>
             <Typography variant="body2" color="text.secondary">

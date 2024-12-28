@@ -84,7 +84,6 @@ const MessagingInput = ({ onSend }) => {
           <IconButton size="small" component="label">
             <AttachFileOutlinedIcon />
             <input type="file" hidden onChange={handleAttachmentChange} />{" "}
-            {/* File input */}
           </IconButton>
         </Badge>
       </Tooltip>

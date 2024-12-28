@@ -13,14 +13,12 @@ const useSignUpFormHandler = () => {
     const [errors, setErrors] = useState({});
     const [alertInfo, setAlertInfo] = useState({ message: "", severity: "" });
 
-    // Set input values
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
-    // Validate user inputs
     const validate = () => {
         const newErrors = {};
         let hasError = false;
@@ -51,7 +49,6 @@ const useSignUpFormHandler = () => {
             hasError = true;
         }
         
-        // Error for helper text
         setErrors(newErrors);
         return !hasError;
     };

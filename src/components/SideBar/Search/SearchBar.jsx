@@ -65,7 +65,7 @@ const SearchBar = ({ open, onClose }) => {
           <Input
             placeholder="Search"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)} // Update search query
+            onChange={(e) => setSearchQuery(e.target.value)} 
             disableUnderline
             fullWidth
             autoFocus
@@ -131,7 +131,7 @@ const SearchBar = ({ open, onClose }) => {
                 <Avatar
                   src={
                     user.profilePicURL ||
-                    "https://www.w3schools.com/howto/img_avatar.png"
+                    "/src/assets/defaultAvatar.jpg"
                   }
                   sx={{ width: 44, height: 44 }}
                 />

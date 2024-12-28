@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Skeleton, Stack, Typography } from "@mui/material";
+import {  Skeleton, Stack } from "@mui/material";
 
 const SkeletonProfileHeader = () => {
   return (
@@ -25,7 +25,6 @@ const SkeletonProfileHeader = () => {
         padding: 2,
       }}
     >
-      {/* Avatar Skeleton */}
       <Skeleton
         variant="circular"
         width={160}
@@ -37,7 +36,6 @@ const SkeletonProfileHeader = () => {
       />
 
       <Stack  alignItems={{ xs: "center", sm: "flex-start" }}>
-        {/* Name and Button Skeleton */}
         <Stack
           direction="row"
           spacing={1}
@@ -45,20 +43,17 @@ const SkeletonProfileHeader = () => {
           flexWrap="wrap"
           justifyContent={{ xs: "center", sm: "flex-start" }}
         >
-          {/* Name Skeleton */}
           <Skeleton variant="text" width={120} height={50} />
-          {/* Button Skeleton */}
           <Skeleton
             variant="rectangular"
             width={80}
             height={30}
             sx={{
-              display: { xs: "none", sm: "block" }, // Match "Follow" button visibility
+              display: { xs: "none", sm: "block" },
             }}
           />
         </Stack>
 
-        {/* Stats Skeleton */}
         <Stack
           direction="row"
           spacing={{ xs: 1, sm: 2 }}
@@ -70,7 +65,6 @@ const SkeletonProfileHeader = () => {
           <Skeleton variant="text" width={60} height={40} />
         </Stack>
 
-        {/* Bio Skeleton */}
         <Stack textAlign={{ xs: "center", sm: "left" }}>
           <Skeleton variant="text" width={100} height={20} />
           <Skeleton variant="text" width={200} height={20} />

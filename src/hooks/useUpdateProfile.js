@@ -37,7 +37,6 @@ const useUpdateProfile = () => {
         return;
       }
 
-      // Update Firebase Authentication profile
       if (profileData.fullName && profileData.fullName !== user.displayName) {
         await updateProfile({ displayName: profileData.fullName });
       }
@@ -46,7 +45,6 @@ const useUpdateProfile = () => {
         await updateEmail(profileData.email);
       }
 
-      // Update Firestore user document
       const userDocRef = doc(firestore, "users", user.uid);
       await updateDoc(userDocRef, {
         fullName: profileData.fullName,
@@ -87,7 +85,6 @@ const useUpdateProfile = () => {
     }
 
     try {
-      // Re-authenticate the user before updating password
       const credential = EmailAuthProvider.credential(user.email, passwordData.currentPassword);
       await reauthenticateWithCredential(user, credential);
 

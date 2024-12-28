@@ -22,6 +22,7 @@ import BookmarkBorderSharpIcon from "@mui/icons-material/BookmarkBorderSharp";
 import BookmarkSharpIcon from "@mui/icons-material/BookmarkSharp";
 import MapsUgcSharpIcon from "@mui/icons-material/MapsUgcSharp";
 import formatTime from "../../utils/formatTime";
+import { useNavigate } from "react-router-dom";
 
 const FeedPost = ({ post }) => {
   const authUser = useAuthStore((state) => state.user);
@@ -50,7 +51,7 @@ const FeedPost = ({ post }) => {
   const { comments, newComment, setNewComment, addComment } = useComments(post);
 
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
-
+  const navigate = useNavigate();
   return (
     <>
       <Paper
@@ -64,7 +65,6 @@ const FeedPost = ({ post }) => {
           width: { xs: "100%", sm: "500px", md: "550px", lg: "450px" },
         }}
       >
-        {/* Header */}
         <Stack
           direction="row"
           alignItems="center"
@@ -74,8 +74,9 @@ const FeedPost = ({ post }) => {
             <Avatar
               src={
                 post.authorProfilePicURL ||
-                "https://www.w3schools.com/howto/img_avatar.png"
+                "/src/assets/defaultAvatar.jpg"
               }
+              onClick={() => navigate(`/${post.authorUsername}`)}
             />
             <Typography
               variant="h5"
@@ -97,7 +98,6 @@ const FeedPost = ({ post }) => {
           </Stack>
         </Stack>
 
-        {/* Image */}
         <Box
           sx={{
             marginY: 2,
@@ -128,7 +128,6 @@ const FeedPost = ({ post }) => {
           </Box>
         </Box>
 
-        {/* Actions */}
         <Box>
           <Box
             sx={{
@@ -173,7 +172,6 @@ const FeedPost = ({ post }) => {
             </IconButton>
           </Box>
 
-          {/* Likes and Caption */}
           <Box>
             <Typography
               variant="body1"
@@ -189,7 +187,6 @@ const FeedPost = ({ post }) => {
             </Typography>
           </Box>
 
-          {/* See All Comments Link */}
           {comments.length > 0 && (
             <Link
               href="#"
@@ -201,7 +198,6 @@ const FeedPost = ({ post }) => {
             </Link>
           )}
 
-          {/* Add a New Comment */}
           <form onSubmit={addComment}>
             <TextField
               placeholder="Add a comment..."
@@ -221,7 +217,6 @@ const FeedPost = ({ post }) => {
         </Box>
       </Paper>
 
-      {/* ProfileModal */}
       <ProfileModal
         open={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}

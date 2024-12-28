@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { auth, firestore } from "../../components/Firebase/firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, arrayUnion, arrayRemove, updateDoc} from "firebase/firestore";
+import { doc, getDoc, arrayUnion, arrayRemove, updateDoc, setDoc } from "firebase/firestore";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
 const loadFromLocalStorage = () => {
   try {
@@ -108,18 +109,15 @@ const useAuthStore = create((set, get) => ({
     set((state) => {
       if (!state.user) return state;
 
-      // Update following for auth user
       const updatedFollowing = isFollowing
         ? [...new Set([...(state.user.following || []), targetUserId])]
         : (state.user.following || []).filter(id => id !== targetUserId);
 
-      // Update user object
       const updatedUser = {
         ...state.user,
         following: updatedFollowing
       };
 
-      // Update userProfile if it exists
       const updatedUserProfile = state.userProfile
         ? {
           ...state.userProfile,
@@ -149,6 +147,44 @@ const useAuthStore = create((set, get) => ({
   logout: () => {
     set({ user: null, userProfile: null });
     localStorage.removeItem("authState");
+  },
+
+  loginWithGoogle: async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const { user: googleUser } = await signInWithPopup(auth, provider);
+      
+      const userDocRef = doc(firestore, "users", googleUser.uid);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (!userDoc.exists()) {
+        const newUser = {
+          uid: googleUser.uid,
+          email: googleUser.email,
+          username: googleUser.email.split('@')[0],
+          fullName: googleUser.displayName,
+          bio: '',
+          profilePicURL: googleUser.photoURL,
+          followers: [],
+          following: [],
+          savedPosts: [],
+          createdAt: new Date().toISOString(),
+        };
+        
+        await setDoc(userDocRef, newUser);
+        set({ user: newUser });
+        saveToLocalStorage({ user: newUser });
+        return true;
+      } else {
+        const userData = userDoc.data();
+        set({ user: { ...userData, id: userDoc.id } });
+        saveToLocalStorage({ user: { ...userData, id: userDoc.id } });
+        return true;
+      }
+    } catch (error) {
+      console.error("Google sign-in error:", error);
+      return false;
+    }
   },
   
 }));

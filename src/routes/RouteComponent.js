@@ -7,6 +7,7 @@ import Reels from "../components/SideBar/Reels/Reels";
 import About from "../pages/About/About";
 import Settings from "../pages/Settings/Settings";
 import Messages from "../pages/Messages/Messages";
+import ErrorPage from "../pages/ErrorPage/ErrorPage";
 export const protectedRoutes = [
   {
     path: "/",
@@ -35,6 +36,10 @@ export const protectedRoutes = [
   {
     path: "/messages/:username",
     element: Messages,
+  },
+  {
+    path: "*",
+    element: ErrorPage
   }
 ];
 
@@ -50,5 +55,9 @@ export const publicRoutes = [
   {
     path: "/about",
     element: About
+  },
+  {
+    path: "*",
+    element: ErrorPage
   }
 ];

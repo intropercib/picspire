@@ -12,7 +12,7 @@ const UserProfile = ({userdata}) => {
           <Avatar
             src={
               userdata.profilePicURL ||
-              "https://www.w3schools.com/howto/img_avatar.png"
+             "/src/assets/defaultAvatar.jpg"
             }
             alt={`${userdata.username}'s profile`}
             sx={{ height: 50, width: 50 }}

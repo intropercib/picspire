@@ -13,8 +13,8 @@ import useLogin from "../../hooks/useLogin";
 import FormSnackbar from "./FormSnackBar";
 import { FormTextField } from "./FormTextField";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import FacebookRoundedIcon from "@mui/icons-material/FacebookRounded";
-
+import GoogleIcon from "@mui/icons-material/Google";
+import useAuthStore from "../store/useAuthStore";
 const LoginForm = () => {
   const { inputs, errors, validate, handleInputChange } = useLoginFormHandler();
   const { login, loading } = useLogin();
@@ -35,6 +35,21 @@ const LoginForm = () => {
   };
 
   const handleClose = () => setShowAlert(false);
+  const loginWithGoogle = useAuthStore((state) => state.loginWithGoogle);
+
+  const handleGoogleLogin = async () => {
+    try {
+      const success = await loginWithGoogle();
+      if (success) {
+        navigate("/");
+      } else {
+        setShowAlert(true);
+      }
+    } catch (error) {
+      console.error("Error signing in with Google:", error);
+      setShowAlert(true);
+    }
+  };
 
   return (
     <Box sx={{ width: "100%", p: 3 }}>
@@ -93,6 +108,14 @@ const LoginForm = () => {
             color="primary"
             onClick={handleAuth}
             disabled={Boolean(loading)}
+            sx={{
+              backgroundColor: (theme) => theme.palette.primary.main,
+              color: (theme) => theme.palette.primary.contrastText,
+              "&:hover": {
+                color: (theme) => theme.palette.text.primary,
+                backgroundColor: (theme) => theme.palette.background.primary,
+              },
+            }}
           >
             {loading ? "Logging in..." : "Log in"}
           </Button>
@@ -106,10 +129,16 @@ const LoginForm = () => {
               justifyContent: "center",
               alignItems: "center",
               gap: "10px",
+              cursor: "pointer", 
+              "&:hover": {    
+                opacity: 0.8
+              }
+              
             }}
+            onClick={handleGoogleLogin}
           >
-            <FacebookRoundedIcon />
-            Login with Facebook
+            <GoogleIcon />
+            {loading ? "Logging in..." : "Login with Google"}
           </Typography>
         </Stack>
 
@@ -122,7 +151,7 @@ const LoginForm = () => {
             textAlign: "center",
           }}
         >
-          Don’t have an account?{" "}
+          Don't have an account?{" "}
           <Typography
             component={Link}
             to="/signup"

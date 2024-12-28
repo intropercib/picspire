@@ -1,5 +1,5 @@
 import { Box, Container, Divider, Skeleton, Stack, Tab, Tabs, Typography } from "@mui/material";
-import React, { useEffect } from "react";
+import React from "react";
 import ProfileHeader from "../../components/Profile/ProfileHeader";
 import ProfileTabs from "../../components/Profile/ProfileTabs";
 import { useParams } from "react-router-dom";
@@ -17,10 +17,9 @@ const Profile = () => {
         <SkeletonProfileHeader />
         <Divider />
         <Stack>
-          {/* Tabs Section */}
           <Stack alignItems="center">
             <Tabs
-              value={0} // Static value for skeleton layout
+              value={0} 
               sx={{
                 "& .MuiTabs-indicator": {
                   height: "2px",
@@ -58,7 +57,6 @@ const Profile = () => {
             </Tabs>
           </Stack>
 
-          {/* Content Skeleton */}
           <Box p={2}>
             <Stack spacing={2} sx={{
               alignItems: "center",

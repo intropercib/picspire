@@ -11,13 +11,11 @@ import { useNavigate } from "react-router-dom";
 const More = ({ open, onClose }) => {
   const navigate = useNavigate();
 
-  // Navigate to the About page and close the dialog
   const handleOpenAbout = () => {
     navigate('/about');
     onClose();
   };
 
-  // Navigate to the Settings page and close the dialog
   const handleOpenSettings = () => {
     navigate('/settings');
     onClose();

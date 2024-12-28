@@ -26,28 +26,23 @@ const MessagingHeader = ({ onBack, selectedUser }) => {
 
   const navigate = useNavigate();
 
-  // Open menu
   const handleMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // Close menu
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
 
-  // Open delete confirmation dialog
   const handleDialogOpen = () => {
     setOpenDialog(true);
     handleMenuClose();
   };
 
-  // Close delete confirmation dialog
   const handleDialogClose = () => {
     setOpenDialog(false);
   };
 
-  // Confirm delete conversation
   const handleConfirmDelete = () => {
     deleteChat(selectedUser.id);
     setOpenDialog(false);
@@ -63,22 +58,19 @@ const MessagingHeader = ({ onBack, selectedUser }) => {
           backgroundColor: (theme) => theme.palette.background.paper,
         }}
       >
-        {/* Back Button */}
         <IconButton edge="start" color="inherit" onClick={onBack}>
           <ArrowBack />
         </IconButton>
 
-        {/* Avatar */}
         <Avatar
           src={
             selectedUser.avatar ||
-            "https://www.w3schools.com/howto/img_avatar.png"
+           "/src/assets/defaultAvatar.jpg"
           }
           alt={selectedUser.username}
           onClick={() => navigate(`/${selectedUser.username}`)}
         />
 
-        {/* Username */}
         <Typography
           variant="h4"
           sx={{
@@ -92,12 +84,10 @@ const MessagingHeader = ({ onBack, selectedUser }) => {
           {selectedUser.username}
         </Typography>
 
-        {/* More Options */}
         <IconButton color="inherit" onClick={handleMenuOpen}>
           <MoreVert />
         </IconButton>
 
-        {/* Options Menu */}
         <Menu
           anchorEl={anchorEl}
           open={Boolean(anchorEl)}
@@ -113,7 +103,6 @@ const MessagingHeader = ({ onBack, selectedUser }) => {
         </Menu>
       </Toolbar>
 
-      {/* Delete Confirmation Dialog */}
       <Dialog
         open={openDialog}
         onClose={handleDialogClose}

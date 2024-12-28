@@ -19,7 +19,6 @@ const SkeletonSuggested = () => {
             </Stack>
           </Stack>
 
-          {/* Logout Skeleton */}
           <Skeleton variant="text" width={50} height={20} />
         </Stack>
         <Skeleton
@@ -35,19 +34,15 @@ const SkeletonSuggested = () => {
           justifyContent="space-between"
           alignItems="center"
         >
-          {/* Left Section: Avatar and User Info */}
           <Stack direction="row" spacing={2} alignItems="center">
-            {/* Avatar Skeleton */}
             <Skeleton variant="circular" width={50} height={50} />
 
-            {/* User Info Skeleton */}
             <Stack spacing={0.5}>
               <Skeleton variant="text" width={120} height={20} />
               <Skeleton variant="text" width={100} height={15} />
             </Stack>
           </Stack>
 
-          {/* Logout Skeleton */}
           <Skeleton variant="text" width={50} height={20} />
         </Stack>
       </Box>

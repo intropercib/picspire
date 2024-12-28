@@ -13,7 +13,6 @@ const validateEditInfo = (data, isPassword = false) => {
     return { isValid: true, message: "" };
   }
 
-  // Validate general profile fields
   const { fullName, email, phoneNumber } = data;
   if (fullName && fullName.length < 3) {
     return { isValid: false, message: "Full name must be at least 3 characters long." };

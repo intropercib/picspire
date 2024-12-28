@@ -9,14 +9,12 @@ const useLoginFormHandler = () => {
 
     const [errors, setErrors] = useState({});
 
-    // Set input values
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setInputs((prev) => ({ ...prev, [name]: value }));
         setErrors((prev) => ({ ...prev, [name]: "" }));
     };
 
-    // Validate user inputs
     const validate = () => {
         const newErrors = {};
         let hasError = false;
@@ -31,7 +29,6 @@ const useLoginFormHandler = () => {
             hasError = true;
         }
 
-        // Error for helper text
         setErrors(newErrors);
         return !hasError;
     };

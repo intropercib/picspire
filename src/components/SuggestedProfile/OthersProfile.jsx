@@ -23,12 +23,17 @@ const OthersProfile = ({ user }) => {
   }
 
   return (
-    <Stack direction="row" justifyContent="space-between" alignItems="center">
+    <Stack direction="row" justifyContent="space-between" alignItems="center"  sx={{
+          borderBottom: "1px solid",
+          borderColor: (theme) => theme.palette.divider,
+          borderRadius: "8px",
+          padding: 1,
+        }}>
       <Stack direction="row" spacing={2} alignItems="center">
         <Avatar
           src={
             user.profilePicURL ||
-            "https://www.w3schools.com/howto/img_avatar.png"
+           "/src/assets/defaultAvatar.jpg"
           }
           alt={`${user.username} Avatar`}
           sx={{ height: 50, width: 50, cursor: "pointer" }}

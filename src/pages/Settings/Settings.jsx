@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  Avatar,
-  ListItemAvatar,
-  Box,
   Container,
   Typography,
   Button,
@@ -10,15 +7,10 @@ import {
   Divider,
   Snackbar,
   CircularProgress,
-  MenuItem,
-  Select,
-  FormControl,
-  InputLabel,
   Dialog,
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
 } from "@mui/material";
 import useDeleteAccount from "../../hooks/useDeleteAccount";
 import useAuthStore from "../../components/store/useAuthStore";
@@ -88,7 +80,6 @@ const Settings = () => {
         </Stack>
       </Container>
 
-      {/* Confirmation Dialog */}
       <Dialog
         open={openDialog}
         onClose={handleCloseDialog}
@@ -146,7 +137,6 @@ const Settings = () => {
         </DialogActions>
       </Dialog>
 
-      {/* Snackbar for feedback */}
       <Snackbar
         open={openSnackbar}
         autoHideDuration={6000}

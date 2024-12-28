@@ -36,7 +36,6 @@ const Messages = () => {
         try {
           const chatList = await fetchChats(authUser.userId);
           const chatsWithUserInfo = await Promise.all(
-            // Array.from(chatList).map(async (chat) => {
 
             chatList.map(async (chat) => {
               const otherUserId = chat.participants.find(
@@ -95,7 +94,6 @@ const Messages = () => {
   };
   return (
     <Box display="flex" width="100%" height="100vh">
-      {/* Left Section: Chat List */}
       <Box
         sx={{
           display: "flex",
@@ -155,7 +153,7 @@ const Messages = () => {
                     <Avatar
                       src={
                         chat.avatar ||
-                        "https://www.w3schools.com/howto/img_avatar.png"
+                        "/src/assets/defaultAvatar.jpg"
                       }
                       alt={chat.username}
                     />
@@ -191,7 +189,6 @@ const Messages = () => {
         </Box>
       </Box>
 
-      {/* Right Section: Chat Window */}
       <Box sx={{ flex: 1 }}>
         {selectedChatId ? (
           <ChatWindow
@@ -239,7 +236,6 @@ const Messages = () => {
         )}
       </Box>
 
-      {/* Search Modal */}
       <SearchMsgModal
         open={isDialogOpen}
         onClose={handleDialogClose}

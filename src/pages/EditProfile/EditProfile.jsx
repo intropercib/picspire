@@ -119,7 +119,6 @@ const EditProfile = () => {
       setPicError("");
       setUploadingPic(true);
 
-      // Open file chooser
       const fileInput = document.createElement("input");
       fileInput.type = "file";
       fileInput.accept = "image/*";
@@ -129,7 +128,6 @@ const EditProfile = () => {
           setUploadingPic(false);
           return;
         }
-        // Upload to Storage
         const storageRef = ref(
           storage,
           `users/${user.uid}/profilePic_${Date.now()}`
@@ -137,12 +135,10 @@ const EditProfile = () => {
         await uploadBytes(storageRef, file);
         const downloadURL = await getDownloadURL(storageRef);
 
-        // Update Firestore
         const userDocRef = doc(firestore, "users", user.uid);
 
         await updateDoc(userDocRef, { profilePicURL: downloadURL });
         await updateAllUserPosts(user.uid, downloadURL);
-        // Update local store
         useAuthStore
           .getState()
           .setUserProfile({ ...authUser, profilePicURL: downloadURL });
@@ -177,7 +173,7 @@ const EditProfile = () => {
           <Avatar
             src={
               authUser.profilePicURL ||
-              "https://www.w3schools.com/howto/img_avatar.png"
+              "/src/assets/defaultAvatar.jpg"
             }
             alt={`${authUser.username}'s profile`}
             sx={{

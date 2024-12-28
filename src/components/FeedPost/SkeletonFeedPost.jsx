@@ -16,7 +16,6 @@ const SkeletonFeedPost = () => {
           border: "2px solid transparent",
         }}
       >
-        {/* Header Skeleton */}
         <Stack
           direction="row"
           alignItems="center"
@@ -36,7 +35,6 @@ const SkeletonFeedPost = () => {
           </Stack>
         </Stack>
 
-        {/* Image Skeleton */}
         <Box
           sx={{
             marginY: 2,
@@ -54,7 +52,6 @@ const SkeletonFeedPost = () => {
           <Skeleton variant="rectangular" width="100%" height="100%" />
         </Box>
 
-        {/* Actions Skeleton */}
         <Box>
           <Stack
             direction="row"
@@ -68,7 +65,6 @@ const SkeletonFeedPost = () => {
             <Skeleton variant="circular" width={30} height={30} />
           </Stack>
 
-          {/* Likes and Caption Skeleton */}
           <Box mt={1}>
             <Skeleton
               variant="text"
@@ -80,12 +76,10 @@ const SkeletonFeedPost = () => {
             />
           </Box>
 
-          {/* Comments Skeleton */}
           <Box mt={1}>
             <Skeleton variant="text" sx={{ width: "50%" }} />
           </Box>
 
-          {/* Add Comment Skeleton */}
           <Skeleton
             variant="rectangular"
             sx={{

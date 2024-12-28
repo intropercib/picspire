@@ -5,8 +5,8 @@ const formatTime = (date) => {
     const intervals = [
         { label: 'yr', seconds: 31536000 },
         { label: 'mo', seconds: 2592000 },
-        { label: 'w', seconds: 604800 },
-        { label: 'd', seconds: 86400 },
+        { label: 'wk', seconds: 604800 },
+        { label: 'day', seconds: 86400 },
         { label: 'hr', seconds: 3600 },
         { label: 'min', seconds: 60 },
     ];

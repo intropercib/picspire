@@ -22,11 +22,9 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
   useEffect(() => {
     if (!chatId) return;
 
-    // Reference to the messages collection in Firestore
     const messagesRef = collection(firestore, `chats/${chatId}/messages`);
     const q = query(messagesRef, orderBy("timestamp"));
 
-    // Listen for real-time updates to the messages collection
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const messageData = snapshot.docs.map((doc) => ({
         id: doc.id,
@@ -42,7 +40,6 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
     if (!text.trim() && !attachment) return;
 
     try {
-      // Add a new message to the Firestore messages collection
       const messagesRef = collection(firestore, `chats/${chatId}/messages`);
       await addDoc(messagesRef, {
         sender: currentUserId,
@@ -51,7 +48,6 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
         timestamp: serverTimestamp(),
       });
 
-      // Update the last message and timestamp in the chat document
       const chatRef = doc(firestore, "chats", chatId);
       await updateDoc(chatRef, {
         lastMessage: attachment ? "Attachment" : text.trim(),
@@ -63,7 +59,6 @@ const ChatWindow = ({ onBack, chatId, currentUserId, selectedUser }) => {
   };
 
   useEffect(() => {
-    // Scroll to the bottom of the chat window when messages change
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }

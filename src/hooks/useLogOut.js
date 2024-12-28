@@ -6,7 +6,6 @@ const useLogOut = () => {
     const [signOut, loading, error] = useSignOut(auth);
     const userLogOut = useAuthStore(state => state.logout);
     
-    // Logout function
     const handleLogOut = async () => {
 
         try {
