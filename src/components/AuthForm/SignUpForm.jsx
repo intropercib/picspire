@@ -102,7 +102,7 @@ const SignUpForm = () => {
             Sign up to see photos and videos from your friends.
           </Typography>
 
-          {/* <Button
+          <Button
             startIcon={<GoogleIcon />}
             variant="contained"
             color="primary"
@@ -120,8 +120,8 @@ const SignUpForm = () => {
             }}
           >
             Login with Google
-          </Button> */}
-          {/* <Divider>OR</Divider> */}
+          </Button>
+          <Divider>OR</Divider>
           <FormTextField
             label="Email"
             name="email"

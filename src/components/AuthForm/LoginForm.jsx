@@ -119,9 +119,9 @@ const LoginForm = () => {
           >
             {loading ? "Logging in..." : "Log in"}
           </Button>
-          {/* <Divider>OR</Divider> */}
+          <Divider>OR</Divider>
 
-          {/* <Typography
+          <Typography
             sx={{
               textDecoration: "none",
               color: (theme) => theme.palette.secondary.main,
@@ -129,17 +129,16 @@ const LoginForm = () => {
               justifyContent: "center",
               alignItems: "center",
               gap: "10px",
-              cursor: "pointer", 
-              "&:hover": {    
-                opacity: 0.8
-              }
-              
+              cursor: "pointer",
+              "&:hover": {
+                opacity: 0.8,
+              },
             }}
             onClick={handleGoogleLogin}
           >
             <GoogleIcon />
             {loading ? "Logging in..." : "Login with Google"}
-          </Typography> */}
+          </Typography>
         </Stack>
 
         <Typography
