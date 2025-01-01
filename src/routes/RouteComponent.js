@@ -4,10 +4,11 @@ import SignUpForm from "../components/AuthForm/SignUpForm";
 import Profile from "../pages/Profile/Profile";
 import EditProfile from "../pages/EditProfile/EditProfile";
 import Reels from "../components/SideBar/Reels/Reels";
-import About from "../pages/About/About";
 import Settings from "../pages/Settings/Settings";
 import Messages from "../pages/Messages/Messages";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
+import About from "../pages/About/About";
+
 export const protectedRoutes = [
   {
     path: "/",
